@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import util,MySQLdb
+import util,MySQLdb,codecs
 from collections import defaultdict
 from datetime import datetime
 from textmind.wenxin import TextMind
@@ -17,6 +17,15 @@ cfg = {
 
 con = MySQLdb.connect(**cfg)
 cur = con.cursor (MySQLdb.cursors.DictCursor)
+
+def get_user_list_from_file(fpath):
+    result = []
+    with codecs.open(fpath,'r',encoding='utf-8-sig') as fp:
+        for line in fp:
+            line = line.strip(' \t\r\n')
+            result.append(line)
+    return result
+
 
 def get_user_list():
     cur.execute('SELECT * FROM sinauids')
@@ -45,12 +54,14 @@ def get_status(uid):
     return result
 
 
-weeks = ['2012%s' % i for i in range(10,52)]
+weeks = ['2012%s' % i for i in range(1,52)]
 
-base_dir = 'J:/Yu-Data/'
+base_dir = 'G:/EXP-Data/'#'J:/Yu-Data/'
 
 if __name__ == '__main__':
-    uid_list = get_user_list()[:600]
+    #uid_list = get_user_list()[:600]
+    uid_list = get_user_list_from_file(r"E:\Study\Publishing\AAAI2015\data\UserList.txt")[5]
+
     result = {}
 
     for uid in uid_list:

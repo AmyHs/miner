@@ -66,13 +66,17 @@ class Result:
             if not isinstance(div_filter_prefix,list):
                 div_filter_prefix = [div_filter_prefix]
             divisor = result.get(divisor_tag,0)
-            if divisor==0:
-                raise RuntimeError('Unable to find divisor tag [%s]!' % divisor_tag)
+
+
             for k,v in result.iteritems():
                 for prefix in div_filter_prefix:
                     if k.startswith(prefix):
-                        result[k] = 100.0 * v / divisor
-                        break
+                        if divisor==0:
+                            #raise RuntimeError('Unable to find divisor tag [%s]!' % divisor_tag)
+                            result[k] = '_%s' % v
+                        else:
+                            result[k] = 100.0 * v / divisor
+                            break
 
         return result
 
@@ -90,6 +94,10 @@ class Result:
             tval = result_.get(suffix,0)
             result_[suffix] = tval + val
         return result_
+
+    def to_list(self,to_ration=True):
+        result = self.stat(to_ration=to_ration)
+        return [i for i in result.itervalues()]
 
     def dump(self,to_ration=True, contains_header=False, separator='\t', fp=None):
         result = self.stat(to_ration=to_ration)

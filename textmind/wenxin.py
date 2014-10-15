@@ -30,44 +30,54 @@ class TextMind:
     def __init__(self, enablePOS = False):
         self.enablePOS = enablePOS
 
-    def process_paragraph(self, paragraph, encoding='utf-8'):
+    def process_iterator(self, iterator):
         r = Result()
 
         n_sentence_total_number = 1
         n_term_total_number = 0
-        n_term_numerals = len( find_numeral(paragraph) )
+        n_term_numerals = 0
         n_term_in_dic = 0
         n_term_len_gte6 = 0
 
         n_term_len_gte4 = 0
         n_term_latin = 0
 
-        n_term_at_mention = len( find_at_mention(paragraph) )
-        n_term_emotion = len( find_emotions(paragraph) )
-        n_term_hashtag = len( find_hashtag(paragraph) )
-        n_term_url = len( find_url(paragraph) )
+        n_term_at_mention = 0
+        n_term_emotion = 0
+        n_term_hashtag = 0
+        n_term_url = 0
 
-        lst = nlpir.Seg(paragraph)
-        for t in lst:
-            term = t[0].decode('utf-8','ignore')
-            POS = t[1]
+        for line in iterator:
+            line = line.strip(' \t\r\n') #.encode('utf-8')
+            if len(line)<1: continue
 
-            n_term_total_number += 1
+            n_term_numerals += len( find_numeral(line) )
+            n_term_at_mention += len( find_at_mention(line) )
+            n_term_emotion += len( find_emotions(line) )
+            n_term_hashtag += len( find_hashtag(line) )
+            n_term_url += len( find_url(line) )
 
-            if is_sentence_separator(term):    #如果是句子分隔符，句子数自增
-                n_sentence_total_number += 1
-            else:
-                if is_latin(term): n_term_latin += 1
-                if len(term)>=6:  n_term_len_gte6 += 1
-                if len(term)>=4:  n_term_len_gte4 += 1
+            lst = nlpir.Seg(line)
+            for t in lst:
+                term = t[0].decode('utf-8','ignore')
+                POS = t[1]
 
-            tags = get_term_tags(term)
-            if len(tags)>0:
-                n_term_in_dic += 1
-                for tag in tags:
-                    r.accumulate(tag)
+                n_term_total_number += 1
 
-            if self.enablePOS: r.accumulate('POS/%s'%POS)
+                if is_sentence_separator(term):    #如果是句子分隔符，句子数自增
+                    n_sentence_total_number += 1
+                else:
+                    if is_latin(term): n_term_latin += 1
+                    if len(term)>=6:  n_term_len_gte6 += 1
+                    if len(term)>=4:  n_term_len_gte4 += 1
+
+                tags = get_term_tags(term)
+                if len(tags)>0:
+                    n_term_in_dic += 1
+                    for tag in tags:
+                        r.accumulate(tag)
+
+                if self.enablePOS: r.accumulate('POS/%s'%POS)
 
         r.accumulate('stat/WordCount', value=n_term_total_number)
         if n_term_total_number == 0: n_term_total_number=float('NaN')
@@ -87,74 +97,23 @@ class TextMind:
 
         return r
 
+    def process_paragraph(self, paragraph, encoding='utf-8'):
+        def iter(paragraph,encoding):
+            yield  paragraph
 
-    def process_file(self, file_path, file_encoding='utf-8-sig'):
-        r = Result()
+        _iter = iter(paragraph, encoding)
+        return self.process_iterator(_iter)
 
-        n_sentence_total_number = 1
-        n_term_total_number = 0
-        n_term_numerals = 0
-        n_term_in_dic = 0
-        n_term_len_gte6 = 0
+    def process_file(self, file_path, encoding='utf-8-sig'):
+        def iter(file_path,file_encoding):
+            with codecs.open(file_path, 'r', encoding=file_encoding) as fp:
+                for line in fp:
+                    line = line.strip(' \t\r\n').encode('utf-8')
+                    if len(line)<1: continue
+                    yield  line
 
-        n_term_len_gte4 = 0
-        n_term_latin = 0
-
-        n_term_at_mention = 0
-        n_term_emotion = 0
-        n_term_hashtag = 0
-        n_term_url = 0
-
-        with codecs.open(file_path, 'r', encoding=file_encoding) as fp:
-            for line in fp:
-                line = line.strip(' \t\r\n').encode('utf-8')
-                if len(line)<1: continue
-
-                n_term_numerals += len( find_numeral(line) )
-                n_term_at_mention += len( find_at_mention(line) )
-                n_term_emotion += len( find_emotions(line) )
-                n_term_hashtag += len( find_hashtag(line) )
-                n_term_emotion += len( find_url(line) )
-
-                lst = nlpir.Seg(line)
-                for t in lst:
-                    term = t[0].decode('utf-8','ignore')
-                    POS = t[1]
-
-                    n_term_total_number += 1
-
-                    if is_sentence_separator(term):    #如果是句子分隔符，句子数自增
-                        n_sentence_total_number += 1
-                    else:
-                        if is_latin(term): n_term_latin += 1
-                        if len(term)>=6:  n_term_len_gte6 += 1
-                        if len(term)>=4:  n_term_len_gte4 += 1
-
-                    tags = get_term_tags(term)
-                    if len(tags)>0:
-                        n_term_in_dic += 1
-                        for tag in tags:
-                            r.accumulate(tag)
-
-                    if self.enablePOS: r.accumulate('POS/%s'%POS)
-
-        r.accumulate('stat/WordCount', value=n_term_total_number)
-        if n_term_total_number == 0: n_term_total_number=float('NaN')
-
-        r.accumulate('stat/WordPerSentence', value=n_term_total_number/n_sentence_total_number)
-        r.accumulate('stat/DicCoverRate', value=n_term_in_dic/n_term_total_number)
-        r.accumulate('stat/Numerals', value=n_term_numerals/n_term_total_number)
-        r.accumulate('stat/SixLtr', value=n_term_len_gte6/n_term_total_number)
-
-        r.accumulate('stat/FourCharWord', value=n_term_len_gte4/n_term_total_number)
-        r.accumulate('stat/Latin', value=n_term_latin/n_term_total_number)
-
-        r.accumulate('stat/AtMention', value=n_term_at_mention)
-        r.accumulate('stat/Emotion', value=n_term_emotion)
-        r.accumulate('stat/HashTag', value=n_term_hashtag)
-        r.accumulate('stat/URLs', value=n_term_url)
-
-        return r
+        _iter = iter(file_path, encoding)
+        return self.process_iterator(_iter)
 
 TextMind._dic = helper.terms
 helper.load_all_dic()
@@ -165,9 +124,9 @@ if __name__ == '__main__':
     textMind = TextMind()
 
     r1 = textMind.process_paragraph(p)
-    r2 = textMind.process_file(u'E:/ICTCLAS/ICTCLAS_2014_Beta/test/docs/0-两栖战车亮相.txt')
-    r3 = textMind.process_file(u'E:/ICTCLAS/ICTCLAS_2014_Beta/test/docs/5.txt','GBK')
+    r2 = textMind.process_file(u'F:/Temp/ICTCLAS2014/test/docs/0-两栖战车亮相.txt',encoding = 'GBK')
+    r3 = textMind.process_file(u'F:/Temp/ICTCLAS2014/test/docs/4-English.txt',encoding = 'GBK')
 
-    print r1.dump(to_ration=False,contains_header=True,separator=',')
-    print r2.dump(to_ration=False)
-    print r3.dump()
+    print r1.dump(to_ration=False,contains_header=True,separator='\t')
+    print r2.dump(to_ration=False,contains_header=True,separator='\t')
+    print r3.dump(to_ration=False,contains_header=True,separator='\t')

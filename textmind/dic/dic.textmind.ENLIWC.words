@@ -1448,8 +1448,8 @@ nothing	Negate	Funct
 neither	Negate	Quant	Funct
 none	Negate	Quant	Funct
 nowhere	Negate	Relative	Funct	Space
-like	None	Time
-kind	None
+like	Filler	Time	Affect	PosEmo
+kind	Affect	PosEmo
 er	Nonfl
 uh	Nonfl
 um	Nonfl

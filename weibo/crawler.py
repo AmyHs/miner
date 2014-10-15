@@ -1,70 +1,77 @@
 # -*- encoding=utf-8 -*-
 __author__ = 'Peter Howe(haobibo@gmail.com)'
 
-import math,os,codecs,time
-from weibo.token import getToken
-from weibo.sina import *
+import math,os,codecs
+from sina import *
 import util
+
+access_token = '2.00jAczuCfj3PXCe55f6357d6UmEuDB'
+base = './' #"D:/"
+debug_enable = False #True if outside SINA intranet, False if inside SINA intranet
+
+APP_KEY = '2323547071'             # app key  '2083434837'
+APP_SECRET = 'YOUR_APP_SECRET'
+CALLBACK_URL = 'YOUR_CALLBACK_URL'
 
 uname = 'd3a907fbea42783d@sina.com'
 passwd = 'd3a907fbea42783d'
 
-access_token = getToken(uname,passwd) #'2.00jAczuCfj3PXC883178e9a0zwIHRD'
-print(access_token)
+if base is None:
+    try:    ind = __file__.rindex('/' if '/' in __file__ else '\\')
+    except: ind = len(__file__)
+    base = __file__[:ind+1] #Get absolute path of base dir
 
-APP_KEY = '2083434837'            # app key
-APP_SECRET = 'YOUR_APP_SECRET'      # app secret
-CALLBACK_URL = 'YOUR_CALLBACK_URL'  # callback url
+base_dir = base + '/UserData/'
+sleep_span = 0.1
+REQUEST_MAX_TRY = 3
 
-base_dir = 'J:/Compare-New/'
-debug_enable = True
-download_fewer_statuses = False
-sleep_span = 0.4
+if debug_enable and access_token is None:
+    from token import getToken
+    access_token = getToken(uname,passwd)
+    print(access_token)
 
 schema='https' if debug_enable else 'http'
 domain = 'api.weibo.com' if debug_enable else 'i2.api.weibo.com'
-
 client = APIClient(app_key=APP_KEY, app_secret=APP_SECRET, redirect_uri=CALLBACK_URL,schema=schema,domain=domain)
 client.access_token = access_token
 
 def get_user_profile(**kwargs):
-    lst = key = None
+    val = key = None
     try:
-        lst = kwargs.pop('screen_name')
+        val = kwargs.pop('screen_name')
         key = 'screen_name'
     except:
         pass
 
-    if lst==None:
+    if val==None:
         try:
-            lst = kwargs.pop('uid')
+            val = kwargs.pop('uid')
             key = 'uid'
         except:
             pass
 
-    if lst is None:
-        raise ValueError('User list shall not be None!')
+    if val is None:
+        raise ValueError('Invalid User Identifier! [uid or screen_name expected.]')
 
-    profiles = []
-    for user in lst:
-        t = {key:user}
-
+    t = {key:val}
+    u = None
+    max_try = REQUEST_MAX_TRY
+    while max_try>0:
         try:
             u = client.users.show.get(**t)
-            print '%s\t%s\t%s\t%s' % (u['id'], u['gender'], u['screen_name'],u['statuses_count'])
-            profiles.append(u)
-        except APIError as e:
-            print e
-
-    return profiles
+            break
+        except Exception as e:
+            max_try -= 1
+            if max_try==0:
+                t['msg'] = str(e)
+                print(t)
+            if isinstance(e, APIError): break
+    return u
 
 
 def get_all_statuses(**kwargs):
-    try:
-        u = client.users.show.get(**kwargs)
-    except Exception as e:
-        print(e.message)
-        return []
+    u = get_user_profile(**kwargs)
+    if u is None: return['Fail to get this user.']
 
     nStatus = int( u['statuses_count'] )
 
@@ -74,17 +81,23 @@ def get_all_statuses(**kwargs):
 
     ss = []
     for i in range(1,nPages+1):
+        kwargs['trim_user'] = 1
         kwargs['count'] = int(per_page)
         kwargs['page'] = i
         if 'screen_name' in kwargs:
                 kwargs['screen_names'] = kwargs.pop('screen_name',None)
 
-        if download_fewer_statuses:
-            if 'uid' in kwargs:
-                kwargs['uids'] = kwargs.pop('uid',None)
-            s = client.statuses.user_timeline.get(**kwargs)
-        else:
-            s = client.statuses.user_timeline.get(**kwargs)
+        max_try = REQUEST_MAX_TRY
+        while max_try>0:
+            try:
+                s = client.statuses.user_timeline.get(**kwargs)
+                break
+            except Exception as e:
+                max_try -= 1
+                if max_try==0:
+                    print(e)
+                    s = json.dumps({'msg':str(e)})
+                if isinstance(e, APIError): break
 
         statuses = s['statuses']
         ss.extend(statuses)
@@ -101,7 +114,7 @@ def get_commnets_by_status(id, comments_count):
     min_page = min(nPages,0)
     for i in range(nPages,min_page, -1):
         c = None
-        max_try = 3
+        max_try = REQUEST_MAX_TRY
         while max_try>0:
             try:
                 c = client.comments.show.get(id=id, count=200, page=i)
@@ -129,7 +142,10 @@ def download_user_profile(uid_tasks):
             continue
 
         try:
-            u = client.users.show.get(uid=uid)
+            u = get_user_profile(uid=uid)
+            if u is None:
+                continue
+
             print '%s\t%s\t%s\t%s' % (u['id'], u['gender'], u['screen_name'],u['statuses_count'])
             with codecs.open( (path % 'Profile') + '.profile','w',encoding='utf-8') as f:
                 json.dump(u,f,ensure_ascii=False)
@@ -144,7 +160,6 @@ def download_user_statuses(uid_tasks,download_comments=False, download_pictures=
         print('Downloading user status of [%s].' % uid)
         status_fpath = '%s/Status/%s.json' % (base_dir, uid)
         if not os.path.exists(status_fpath):
-            print('Downloading info of user: %s ...' % uid)
             try:
                 statuses = get_all_statuses(uid=uid)
                 with codecs.open((path % 'Status')+'.json', 'w', encoding='utf-8') as f:
@@ -153,22 +168,18 @@ def download_user_statuses(uid_tasks,download_comments=False, download_pictures=
                 print uid, e
             except Exception as e:
                 print uid, e
-        else:
+        elif download_comments or download_pictures:
             with codecs.open(status_fpath,'r','utf-8-sig') as fp_status:
                statuses = json.load(fp_status,encoding='utf-8')
 
-        if download_comments:
-            #download status comments
+        if download_comments:   #download status comments
             cmt_folder = '%s/Comments/%s/' % (base_dir, uid)
-            if os.path.exists(cmt_folder + 'done'):
-                continue
+            if os.path.exists(cmt_folder + 'done'): continue
 
             try: os.makedirs(cmt_folder)
             except: pass
 
             for status in statuses:
-                #time.sleep(sleep_span)
-
                 cmts_count = int( status['comments_count'] )
                 if cmts_count < 1:continue
 
@@ -189,8 +200,7 @@ def download_user_statuses(uid_tasks,download_comments=False, download_pictures=
             with codecs.open(cmt_folder + 'done', 'w', encoding='utf-8') as fp:
                 fp.write('done')
 
-        if download_pictures:
-            #download status original pictures
+        if download_pictures:   #download status original pictures
             pic_folder = '%s/Pictures/%s/' % (base_dir, uid)
             if os.path.exists(pic_folder + 'done'):
                 continue
@@ -225,14 +235,9 @@ def download_user_statuses(uid_tasks,download_comments=False, download_pictures=
 
 
 def run():
-    #uids = util.get_lines(base_dir + 'TaskList.txt')
-    #param = {'uid':uids}
-    #users = get_user_profile(**param)
-    #with codecs.open(base_dir + 'UserInfo.txt', 'w',encoding='utf-8') as fp:
-    #    json.dump(users,fp,ensure_ascii=False,encoding='utf-8')
-    uid_tasks = util.get_user_path_list('%s')
+    uid_tasks = util.get_user_path_list(base_dir,dir='%s')
     download_user_profile(uid_tasks)
-    download_user_statuses(uid_tasks,download_pictures=True)
+    download_user_statuses(uid_tasks)
 
 if __name__ == '__main__':
     run()

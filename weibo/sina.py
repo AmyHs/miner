@@ -152,8 +152,10 @@ def _http_call(the_url, method, authorization, parseJson=True, **kw):
         req.add_header('Authorization', 'OAuth2 %s' % authorization)
     if boundary:
         req.add_header('Content-Type', 'multipart/form-data; boundary=%s' % boundary)
+
+    #print params
     try:
-        resp = urllib2.urlopen(req, timeout=5)
+        resp = urllib2.urlopen(req, timeout=2)
         body = _read_body(resp)
         r = _parse_json(body,parseJson=parseJson)
         if hasattr(r, 'error_code'):
@@ -302,6 +304,7 @@ class _Executable(object):
         method = _METHOD_MAP[self._method]
         if method==_HTTP_POST and 'pic' in kw:
             method = _HTTP_UPLOAD
+        kw['source'] = self._client.client_id   #for sina intranet
         return _http_call('%s%s.json' % (self._client.api_url, self._path), method, self._client.access_token, parseJson=self._client.parseJson, **kw)
 
     def __str__(self):

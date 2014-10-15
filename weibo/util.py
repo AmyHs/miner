@@ -6,9 +6,8 @@ from collections import OrderedDict
 from datetime import datetime
 import time
 
-base_dir = 'J:/Compare-New'
 
-def get_user_path_list(dir='/'):
+def get_user_path_list(base_dir, dir='/'):
     uids = get_lines(base_dir+'/TaskList.txt')
 
     updic = dict()

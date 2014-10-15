@@ -24,7 +24,6 @@ class MainForm(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.pushButton_save,QtCore.SIGNAL("clicked()"), self.file_save)
         QtCore.QObject.connect(self.ui.pushButton_append,QtCore.SIGNAL("clicked()"), self.file_append)
 
-
     def about(self):
         QMessageBox.about(self,"About TextMind",self.tr("“文心”中文心理分析系统是由中科院心理所计算网络心理实验室"
             "（http://ccpl.psych.ac.cn）研发的，针对中文文本进行语言分析的软件系统。\n"
@@ -58,7 +57,7 @@ class MainForm(QtGui.QMainWindow):
         textmind = TextMind()
         result = textmind.process_paragraph(txt)
         self.analysis_result = result
-        r = result.stat()
+        r = result.stat(to_ration=True)
 
         table_view = self.ui.table
         table_view.clearContents()
@@ -86,11 +85,10 @@ class MainForm(QtGui.QMainWindow):
         fpath =fd.getSaveFileName(parent=self, caption=self.tr("将分析结果导出至文件"),
                                   filter=self.tr("逗号分隔文件[可用Excel直接打开](*.csv)"))
         fpath = unicode(fpath)
-        if os.path.exists(fpath):
-            with codecs.open(fpath, 'w', encoding='utf-8') as fp:
-                fp.write(u'\uFEFF\n')
-                self.analysis_result.dump(fp=fp,separator=',',contains_header=True)
-                fp.write(u'\n')
+        with codecs.open(fpath, 'w', encoding='utf-8') as fp:
+            fp.write(u'\uFEFF')
+            self.analysis_result.dump(fp=fp,separator=',',contains_header=True)
+            fp.write(u'\n')
 
     def file_append(self):
         r = self.analysis_result
