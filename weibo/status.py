@@ -11,7 +11,7 @@ from weibo import Base
 import util
 
 class Status(Base):
-    table_name = 'sina_status'
+    table_name = '%_status' % Base.get_prefix()
     column_family = 'status'
     attrs = ['key', 'idstr', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
@@ -29,7 +29,7 @@ class Status(Base):
         uid = 0L
         user = dic.get('user',None)
         if user is None:
-            uid = dic.get('id',dic.get('user_id'))
+            uid = dic.get('uid',dic.get('user_id',None))
             if uid is None:
                 raise ValueError('Data Error: Either User information or user id is expected in the status data!')
             else:
@@ -139,7 +139,7 @@ class Status(Base):
         return json.dumps(r,indent=1,ensure_ascii=False)
 
 class UserStatuses(object):
-    table_name = 'sina_user'
+    table_name = '%_user' % Base.get_prefix()
     column_family = 'status'
     __slots__ = ['uid', 'qualifier', 'mvalue']
 

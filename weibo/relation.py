@@ -5,7 +5,7 @@ import struct
 from hbase.Hbase import *
 
 import util
-from weibo import UserProfile
+from weibo import Base,UserProfile
 
 verified_type_map = {
     -1:32,
@@ -14,7 +14,7 @@ verified_type_map = {
 }
 
 class Relation:
-    tableName = 'sina_user'
+    table_name = '%_user' % Base.get_prefix()
     column_family = 'relation'
 
     def load(self, self_uid, following=None, followers=None):
@@ -58,7 +58,7 @@ class Relation:
             batches_uprofile = uprofile.get_batches()
             batches.extend(batches_uprofile)
 
-        #根据关系情况，把用户的id插入到sina_user:relation列族中
+        #根据关系情况，把用户的id插入到_user:relation列族中
         mutations = []
         for uid,relation in self.uids.iteritems():
             qualifier = struct.pack('<q',uid)

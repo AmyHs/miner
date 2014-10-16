@@ -219,7 +219,7 @@ def stat(uid):
     return r1 + '\t' + r2
 
 
-if __name__ == '__main__':
+if __name__ == '__main__1':
     with codecs.open('E:/result.csv','w',encoding='utf-8') as fw:
         with codecs.open(u"E:/Study/Research-Suicide/Data-用户实验-v2/UserList.txt",'r',encoding='utf-8-sig') as fp:
             for line in fp:
@@ -227,3 +227,7 @@ if __name__ == '__main__':
                 print uid
                 r = stat(uid) + '\n'
                 fw.write(r)
+
+
+if __name__ == '__main__':
+    print stat(1191603864)

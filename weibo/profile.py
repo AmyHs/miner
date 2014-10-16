@@ -8,7 +8,7 @@ import util
 from weibo import Base
 
 class UserProfile(Base):
-    table_name = 'sina_user'
+    table_name = '%_user' % Base.get_prefix()
     column_family = 'profile'
     attrs = ['key', 'idstr',
         'name', 'gender', 'created_at','description', 'domain', 'url', 'profile_url',

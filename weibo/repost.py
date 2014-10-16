@@ -7,7 +7,7 @@ from weibo import *
 import util
 
 class Repost(Base):
-    table_name = 'sina_status'
+    table_name = '%_status' % Base.get_prefix()
     column_family = 'repost'
     attrs = ['id', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
@@ -21,16 +21,16 @@ class Repost(Base):
     def __init__(self):
         self.batches = []
 
-    def load(self, repost_uid, repost_mid, dic):
-        self.repost_uid = repost_uid
-        self.repost_mid = repost_mid
+    def load(self, original_uid, original_mid, dic):
+        self.original_uid = original_uid
+        self.original_mid = original_mid
 
         uid = None
         deleted = dic.get('deleted',None)
         if deleted is None: #转发的微博没有被删除
             user = dic.get('user',None)
             if user is None:
-                uid = dic.get('id',dic.get('user_id'))
+                uid = dic.get('uid',dic.get('user_id',None))
                 if uid is None:
                     raise ValueError('Data Error: Either User information or user id is expected in the status data!')
                 else:
@@ -60,10 +60,6 @@ class Repost(Base):
 
                 self.setattr(attr,v)
 
-            ustatus = UserStatuses()
-            ustatus.load(self, uid)
-            self.batches.extend(ustatus.get_batches())
-
     def setattr(self,attr,v):
         if attr == 'created_at':
             str_original = None
@@ -82,16 +78,15 @@ class Repost(Base):
         self.__setattr__(attr,v)
 
 
-
     def get_key(self):
         #处理转发微博的key
-        key = struct.pack('<qq', self.repost_uid, self.repost_mid)
+        key = struct.pack('<qq', self.original_uid, self.original_mid)
         return buffer(key)
 
     def getattr(self,attr):
         #处理特殊字段
         if attr == 'key':
-            return long(self.mid)
+            return long(self.id)
         elif attr in ['pic_urls', 'annotations', 'geo']:
             try:
                 v = getattr(self,attr)

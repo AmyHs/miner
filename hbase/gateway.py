@@ -5,26 +5,62 @@ import Hbase
 from ttypes import *
 from thrift.transport import *
 
-cfg = {
-    'host' : '192.168.21.51',
-    'port' : 9090
-}
+port = 9090
+hosts = ['192.168.9.%d' % i for i in range(1,45)]
 
-def applyBatch(batches, hbase_cfg=cfg):
+class HBaseClient:
+    def __init__(self, index=0, ):
+        address = HBaseClient.cfg[index]['host']
+        port = HBaseClient.cfg[index]['port']
+        self.index = index
+        self.transport = TTransport.TBufferedTransport(TSocket.TSocket(address, port))
+        self.protocol = TBinaryProtocol.TBinaryProtocolAccelerated(self.transport)
 
-    # Connect to HBase Thrift server
-    transport = TTransport.TBufferedTransport(TSocket.TSocket(**cfg))
-    transport.open()
+        self.client = Hbase.Client(self.protocol)
+        self.transport.open()
 
-    # Create and open the client connection
-    protocol = TBinaryProtocol.TBinaryProtocolAccelerated(transport)
-    client = Hbase.Client(protocol)
-    for batch in batches:
-        tableName = batch['tableName']
-        rowBatches = batch['rowBatches']
+    def reconnect(self):
+        try:
+            self.transport.close()
+        except Exception as e:
+            print e
 
-        client.mutateRows(tableName,[rowBatches],None)
+        maxTry = 100
+        while True:
+            maxTry -= 1
+            if maxTry < 0:
+                exit(1)
+            try:
+                self.index = (self.index+1)% len( HBaseClient.cfg )
+                address = HBaseClient.cfg[self.index]['host']
+                port = HBaseClient.cfg[self.index]['port']
 
-        #print("%5d mutations inserted into table %s." % (len(rowBatches.mutations),tableName))
-    #print("----------------------")
-    transport.close()
+                self.transport = TTransport.TBufferedTransport(TSocket.TSocket(address, port))
+                self.protocol = TBinaryProtocol.TBinaryProtocolAccelerated(self.transport)
+
+                self.client = Hbase.Client(self.protocol)
+                self.transport.open()
+                break
+            except Exception as e:
+                print 'reconnect error:', e.message
+
+    def clientClose(self):
+        self.transport.close()
+
+    def applyBatch(self, batches):
+        for batch in batches:
+            tableName = batch['tableName']
+            rowBatches = batch['rowBatches']
+
+            retryTime = 3
+            while retryTime>0:
+                retryTime -= 1
+                try:
+                    self.client.mutateRows(tableName,[rowBatches],None)
+                    break
+                except Exception as e:
+                    if retryTime == 0:
+                        self.reconnect()
+                        retryTime = 3
+
+HBaseClient.cfg = [{'host':host, 'port':port} for host in hosts]

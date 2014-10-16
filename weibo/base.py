@@ -8,6 +8,12 @@ class Base(object):
     #def __init__(self):
     #    raise TypeError('The abstract Base class shall not be instantiated!')
 
+    def set_prefix(self,prefix):
+        Base.prefix = prefix
+
+    def get_prefix(self):
+        return 'test' if Base.prefix is None else Base.prefix
+
     def get_bytes(self, attr):
         '''自定义方法，用于将字段值输出为HBase所需的数据存储类型'''
         v = getattr(self,attr, None)
@@ -17,12 +23,13 @@ class Base(object):
         f = None
         if isinstance(v, basestring) and isinstance(v, unicode): #如果是basestring且为unicode格式
             v = v.encode('utf-8')
+        elif isinstance(v, bool):  #如果是布尔类型，以bool类型存储，bool的判断需要在int之前，在python中，isinstance(True,int)会返回True.
+            f = '>?'
         elif isinstance(v, int):  #如果是整数，以big-endian的整数类型存储
             f = '>i'
         elif isinstance(v, long):
             f = '>q'
-        elif isinstance(v, bool):  #如果是布尔类型，以bool类型存储
-            f = '>?'
+
         if f is not None: v = buffer(struct.pack(f, v))
 
         return v

@@ -3,9 +3,10 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import struct
 from hbase.Hbase import *
+from weibo import Base
 
 class UserTag:
-    table_name = 'sina_user'
+    table_name = '%_user' % Base.get_prefix()
     column_family = 'tag'
     __slots__ = ['uid','tags']
 

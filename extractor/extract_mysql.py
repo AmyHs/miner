@@ -54,7 +54,7 @@ def get_status(uid):
     return result
 
 
-weeks = ['2012%s' % i for i in range(1,52)]
+weeks = ['2011%s' % i for i in range(1,52)].extend(['2012%s' % i for i in range(1,52)])
 
 base_dir = 'G:/EXP-Data/'#'J:/Yu-Data/'
 
@@ -76,12 +76,12 @@ if __name__ == '__main__':
             if len(v)>0:
                 k2 = '%s#%s' % (uid, k)
                 try:
-                    vector = textMind.process_paragraph(v,encoding='utf-8')
-                    result[k2] = vector
+                    vec = textMind.process_paragraph(v,encoding='utf-8')
+                    result[k2] = vec
                 except WindowsError as e:
                     pass
 
-    cols = vector._results.iterkeys()
+    cols = vec._results.iterkeys()
     for col in cols:
         fpath = base_dir + (col.replace('/','_'))
         with open(fpath, 'w') as fp:

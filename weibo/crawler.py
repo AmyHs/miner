@@ -5,16 +5,19 @@ import math,os,codecs
 from sina import *
 import util
 
-access_token = '2.00jAczuCfj3PXCe55f6357d6UmEuDB'
+access_token = None#'2.00jAczuCfj3PXCe55f6357d6UmEuDB'
 base = './' #"D:/"
-debug_enable = False #True if outside SINA intranet, False if inside SINA intranet
+debug_enable = True #True if outside SINA intranet, False if inside SINA intranet
 
 APP_KEY = '2323547071'             # app key  '2083434837'
 APP_SECRET = 'YOUR_APP_SECRET'
 CALLBACK_URL = 'YOUR_CALLBACK_URL'
 
-uname = 'd3a907fbea42783d@sina.com'
-passwd = 'd3a907fbea42783d'
+uname = 'wsi_gucas@sina.com'
+passwd = 'wsi_208'
+
+#uname = 'd3a907fbea42783d@sina.com'
+#passwd = 'd3a907fbea42783d'
 
 if base is None:
     try:    ind = __file__.rindex('/' if '/' in __file__ else '\\')
@@ -54,6 +57,7 @@ def get_user_profile(**kwargs):
         raise ValueError('Invalid User Identifier! [uid or screen_name expected.]')
 
     t = {key:val}
+    print(t)
     u = None
     max_try = REQUEST_MAX_TRY
     while max_try>0:
@@ -71,6 +75,9 @@ def get_user_profile(**kwargs):
 
 def get_all_statuses(**kwargs):
     u = get_user_profile(**kwargs)
+
+    print u
+
     if u is None: return['Fail to get this user.']
 
     nStatus = int( u['statuses_count'] )

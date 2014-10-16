@@ -234,6 +234,14 @@
 		<answer aid="e" score="0">45~60分钟</answer>
 		<answer aid="f" score="0">一小时以上</answer>
 	</question>
+	
+	<question qid="q29" type="text">
+		<title>您的手机号(您填写的该号码将用于发放报酬，报酬会以话费形式，在工作人员审验问卷为认真填写问卷后发放)：</title>
+    </question>
+	
+	<question qid="q30" type="text">
+		<title>您的18位身份证号(该号码为发放报酬所需信息，我们会严格保密；之所以需要您的身份证号，是因为报酬经费的来源为科研项目基金，审计部门需要确认报酬真实发放给了被试)：</title>
+    </question>
 
   </questions>
   
