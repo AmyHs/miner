@@ -11,7 +11,7 @@ from weibo import Base
 import util
 
 class Status(Base):
-    table_name = '%_status' % Base.get_prefix()
+    table_name = '%s_status' % Base.get_prefix()
     column_family = 'status'
     attrs = ['key', 'idstr', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
@@ -139,7 +139,7 @@ class Status(Base):
         return json.dumps(r,indent=1,ensure_ascii=False)
 
 class UserStatuses(object):
-    table_name = '%_user' % Base.get_prefix()
+    table_name = '%s_user' % Base.get_prefix()
     column_family = 'status'
     __slots__ = ['uid', 'qualifier', 'mvalue']
 

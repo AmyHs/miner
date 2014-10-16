@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import util,MySQLdb,codecs
-from collections import defaultdict
+import util,MySQLdb,codecs,json
+from collections import defaultdict,OrderedDict
 from datetime import datetime
 from textmind.wenxin import TextMind
 
@@ -54,49 +54,56 @@ def get_status(uid):
     return result
 
 
-weeks = ['2011%s' % i for i in range(1,52)].extend(['2012%s' % i for i in range(1,52)])
+base_dir = 'G:/EXP-Data/'
 
-base_dir = 'G:/EXP-Data/'#'J:/Yu-Data/'
+def process_users(uid_list):
+    for uid in uid_list:
+        u_result = {}
+
+        with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
+            statuses = get_status(uid)
+            keys = sorted(statuses.iterkeys())
+            for k in keys:
+                textMind = TextMind()
+                t = statuses.get(k)
+                v = t.encode('utf-8')
+
+                if len(v)>0:
+                    vec = textMind.process_paragraph(v,encoding='utf-8').dump(separator=',')
+                    u_result[k] = vec
+
+            json.dump(u_result, fp, indent=1)
+
+def process_features(uid_list,time_list):
+    header = TextMind().get_header()
+
+    fw_pool = OrderedDict()
+    for head in header:
+        k = head.replace('/','_')
+        v = '%sTimeSequence/%s.csv' % (base_dir, k)
+        fp = open(v, 'w+')
+        fw_pool[head] = fp
+
+    for uid in uid_list:
+        with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'r', encoding='utf-8-sig') as fp:
+            u_seq = json.load(fp,encoding='utf-8')
+
+            for t in time_list:
+                vec = u_seq.get(t,None)
+                features = [0] * len(header) if vec is None else vec.split(',')
+
+                iter = 0
+                for head,fw in fw_pool.iteritems():
+                    fw.write( '%s,' % features[iter] )
+                    iter += 1
+
+            for fw in fw_pool.values():
+                fw.write('\n')
 
 if __name__ == '__main__':
     #uid_list = get_user_list()[:600]
-    uid_list = get_user_list_from_file(r"E:\Study\Publishing\AAAI2015\data\UserList.txt")[5]
+    uid_list = get_user_list_from_file(r"E:\Study\Publishing\TimeSequencePaper\data\UserList.txt")
+    time_list = ['2011%s' % i for i in range(1,52)] + ['2012%s' % i for i in range(1,36)]
 
-    result = {}
-
-    for uid in uid_list:
-        statuses = get_status(uid)
-
-        keys = sorted(statuses.iterkeys())
-        for k in keys:
-            textMind = TextMind()
-            t = statuses.get(k)
-            v = t.encode('utf-8')
-
-            if len(v)>0:
-                k2 = '%s#%s' % (uid, k)
-                try:
-                    vec = textMind.process_paragraph(v,encoding='utf-8')
-                    result[k2] = vec
-                except WindowsError as e:
-                    pass
-
-    cols = vec._results.iterkeys()
-    for col in cols:
-        fpath = base_dir + (col.replace('/','_'))
-        with open(fpath, 'w') as fp:
-            for week in weeks:
-                k = '%s\t' % week
-                fp.write(k)
-
-            for uid in uid_list:
-                fp.write('\n%s\t' % uid)
-
-                for week in weeks:
-                    k = '%s#%s' % (uid, week)
-                    vector = result.get(k,None)
-                    if vector is None:
-                        val = 0
-                    else:
-                        val = vector.__getitem__(col)
-                    fp.write('%s\t' % val)
+    process_users(uid_list)
+    process_features(uid_list,time_list)

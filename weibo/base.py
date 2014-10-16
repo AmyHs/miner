@@ -7,11 +7,12 @@ from hbase.ttypes import *
 class Base(object):
     #def __init__(self):
     #    raise TypeError('The abstract Base class shall not be instantiated!')
-
-    def set_prefix(self,prefix):
+    @staticmethod
+    def set_prefix(prefix):
         Base.prefix = prefix
 
-    def get_prefix(self):
+    @staticmethod
+    def get_prefix():
         return 'test' if Base.prefix is None else Base.prefix
 
     def get_bytes(self, attr):
@@ -72,3 +73,5 @@ class Base(object):
             batches = [result]
 
         return batches
+
+Base.set_prefix('test')

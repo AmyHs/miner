@@ -7,7 +7,7 @@ from weibo import *
 import util
 
 class Repost(Base):
-    table_name = '%_status' % Base.get_prefix()
+    table_name = '%s_status' % Base.get_prefix()
     column_family = 'repost'
     attrs = ['id', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',

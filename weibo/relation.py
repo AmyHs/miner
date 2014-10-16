@@ -14,7 +14,7 @@ verified_type_map = {
 }
 
 class Relation:
-    table_name = '%_user' % Base.get_prefix()
+    table_name = '%s_user' % Base.get_prefix()
     column_family = 'relation'
 
     def load(self, self_uid, following=None, followers=None):

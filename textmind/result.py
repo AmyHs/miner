@@ -107,6 +107,11 @@ class Result:
             fp.write(r)
         return r
 
+    def get_header(self):
+        result = self.stat()
+        r = [i for i in result.iterkeys()]
+        return r
+
     def __str__(self):
         return self.dump()
 

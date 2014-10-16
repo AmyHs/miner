@@ -115,6 +115,10 @@ class TextMind:
         _iter = iter(file_path, encoding)
         return self.process_iterator(_iter)
 
+    def get_header(self):
+        r = self.process_paragraph('')
+        return r.get_header()
+
 TextMind._dic = helper.terms
 helper.load_all_dic()
 

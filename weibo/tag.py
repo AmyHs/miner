@@ -6,7 +6,7 @@ from hbase.Hbase import *
 from weibo import Base
 
 class UserTag:
-    table_name = '%_user' % Base.get_prefix()
+    table_name = '%s_user' % Base.get_prefix()
     column_family = 'tag'
     __slots__ = ['uid','tags']
 
