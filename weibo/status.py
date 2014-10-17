@@ -62,7 +62,7 @@ class Status(Base):
             self.batches.extend(retweet.get_batches())
 
             #将转发微博对应的原创微博单独存放一份作为原始微博
-            if repost.get('deleted',0)==0:  #如果被转发的微博已经被删除，则不保存为原创微博
+            if repost.get('deleted',0)!=0:  #如果被转发的微博已经被删除，则不保存为原创微博
                 original = Status()
                 original.load(repost)
                 self.batches.extend(original.get_batches())

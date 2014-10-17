@@ -58,7 +58,6 @@ class WeiboLogin:
             if retcode>0:   #登陆异常
                 reason = resp.get('reason')
                 info = "[%d]%s" % (retcode,reason)
-                print(info)
                 raise RuntimeError(info)
 
             self.ticket = resp.get('ticket')
@@ -77,8 +76,9 @@ class WeiboLogin:
             flag = 'access_token":"'
             starts = resp.find(flag)
             if starts<0:
-                print(resp)
-                raise RuntimeError('Access Token not found in the respone content!')
+                #print(resp)
+                msg = 'Access Token not found in the respone content!'
+                raise RuntimeError(msg)
 
             return resp[starts+len(flag):starts+len(flag)+32]
 
@@ -198,10 +198,21 @@ def getToken(uname, pwd):
     token = sim.Login()
     return token
 
+def getAccounts(fname):
+    accounts = {}
+    with open(fname,'r') as fp:
+        for line in fp:
+            uname, passwd = line.strip(' \t\r\n').split('\t')
+            accounts[uname] = passwd
+    return accounts
+
 if __name__ == '__main__':
-    users = {
-        'wsi_gucas@sina.com': 'wsi_208'
-    }
-    for uname,pwd in users.iteritems():
-        token = getToken(uname,pwd)
-        print token
+    #accounts = { 'wsi_gucas@sina.com': 'wsi_208' }
+    accounts = getAccounts(r"E:\Study\CCPL\Weibo\Commons\TokenHelper\accounts.txt")
+
+    for uname,pwd in accounts.iteritems():
+        try:
+            token = getToken(uname,pwd)
+        except Exception as e:
+            token = e.message
+        print '\t'.join([uname, pwd, token])
