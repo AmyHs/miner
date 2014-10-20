@@ -22,6 +22,7 @@ __pycache__
 # Installer logs
 pip-log.txt
 pyxll/logs
+weibo/UserData
 
 # Unit test / coverage reports
 .coverage

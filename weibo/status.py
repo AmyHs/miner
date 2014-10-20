@@ -16,10 +16,11 @@ class Status(Base):
     attrs = ['key', 'idstr', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
          'source', 'geo', 'pic_urls', 'annotations', 'truncated', 'r_id']
-    types = [None, str, long, str, str, str, int,
+    types = dict(zip(attrs,
+        [None, str, long, str, str, str, int,
         int, int ,int,
-        str, str, str, str, bool, long
-    ]
+        str, str, str, str, bool, long]
+    ))
 
     def __init__(self):
         self.batches = []
@@ -62,7 +63,7 @@ class Status(Base):
             self.batches.extend(retweet.get_batches())
 
             #将转发微博对应的原创微博单独存放一份作为原始微博
-            if repost.get('deleted',0)!=0:  #如果被转发的微博已经被删除，则不保存为原创微博
+            if repost.get('deleted',0)==0:  #如果被转发的微博已经被删除，则不保存为原创微博
                 original = Status()
                 original.load(repost)
                 self.batches.extend(original.get_batches())
@@ -119,7 +120,7 @@ class Status(Base):
            except AttributeError as e:
                 return None
         else:
-            return self.get_bytes(attr)
+            return self.get_bytes(attr, Status.types.get(attr))
 
     def get_original_value(self,attr):
         #处理特殊字段

@@ -5,8 +5,8 @@ import math,os,codecs
 from sina import *
 import util
 
-access_token = '2.00jAczuCfj3PXC23a52d5b13pBDRrC'
-base = './' #"D:/"
+access_token = '2.00ZPCQvCfj3PXCdfae6d3a250XaASC'
+base = 'J:/' #"D:/"
 debug_enable = True #True if outside SINA intranet, False if inside SINA intranet
 
 APP_KEY = '2323547071'             # app key  '2083434837'
@@ -155,7 +155,7 @@ def download_user_profile(uid_tasks):
         except APIError as e1:
             print uid, e1.message
         except UnicodeEncodeError as e2:
-            print uid,e2
+            print uid,e2.message
             json.dump(u,f,ensure_ascii=True)
 
 def download_user_statuses(uid_tasks,download_comments=False, download_pictures=False):
@@ -239,8 +239,9 @@ def download_user_statuses(uid_tasks,download_comments=False, download_pictures=
 
 def run():
     uid_tasks = util.get_user_path_list(base_dir,dir='%s')
-    #download_user_profile(uid_tasks)
-    download_user_statuses(uid_tasks)
+    print len(uid_tasks)
+    download_user_profile(uid_tasks)
+    #download_user_statuses(uid_tasks)
 
 if __name__ == '__main__':
     run()

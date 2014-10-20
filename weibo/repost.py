@@ -12,11 +12,11 @@ class Repost(Base):
     attrs = ['id', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
          'source', 'geo', 'pic_urls', 'annotations', 'truncated']
-
-    types = [long, long, str, str, str, int,
+    types = dict(zip(attrs,
+        [long, long, str, str, str, int,
         int, int, int,
-        str, str, str, str, bool
-    ]
+        str, str, str, str, bool]
+    ))
 
     def __init__(self):
         self.batches = []
@@ -95,7 +95,7 @@ class Repost(Base):
             except AttributeError as e:
                 return None
         else:
-            return self.get_bytes(attr)
+            return self.get_bytes(attr, Repost.types.get(attr))
 
     def get_original_value(self,attr):
         #print self.text

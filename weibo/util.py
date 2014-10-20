@@ -6,7 +6,8 @@ import os.path, time, struct
 from datetime import datetime
 
 def get_user_path_list(base_dir, dir='/'):
-    uids = get_lines(base_dir+'/TaskList.txt')
+    fpath = base_dir+'/TaskList.txt'
+    uids = get_lines(fpath)
 
     updic = dict()
     for uid in uids:

@@ -18,13 +18,14 @@ class UserProfile(Base):
         #created_at_or: 留存created_at的原始字段的原始字符串类型
         'created_at_or']
 
-    types = [long, str,
+    types = dict(zip(attrs,
+        [long, str,
         str, str, int, str, str, str, str,
         int, int, int, int, int,
         bool, bool, bool, bool, str, str,
         str, str, str, str, str, str, str,
-        str
-    ]
+        str]
+    ))
 
     def __init__(self):
         self.batches = []
@@ -73,7 +74,8 @@ class UserProfile(Base):
         if attr == 'key':
             return int(self.key)
         else:
-            return self.get_bytes(attr)
+
+            return self.get_bytes(attr, UserProfile.types.get(attr))
 
     def get_original_value(self,attr):
         #处理特殊字段

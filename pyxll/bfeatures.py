@@ -42,7 +42,7 @@ cur_dir = __file__[:ind+1]
 neg_exp = get_lines(cur_dir + r"./weibo/Exps-Neg.lst")
 pos_exp = get_lines(cur_dir + r"./weibo/Exps-Pos.lst")
 
-@xl_func("str uid, str attr: int")
+@xl_func("str uid, str attr: int",thread_safe=True, volatile=False)
 def get_uattr(uid,attr):
     """returns specific attr for user with given uid"""
     fname = "%s%s.profile" % (dir_profile,uid)
@@ -58,7 +58,7 @@ def get_uattr(uid,attr):
                 t = t.get(a,'N/A[%s]-U%s' % (a,uid))
     return t
 
-@xl_func("str uid, str attr: string")
+@xl_func("str uid, str attr: string",thread_safe=True, volatile=False)
 def get_uattr_str(uid,attr):
     x = get_uattr(uid,attr)
     if isinstance(x,unicode):
@@ -66,7 +66,7 @@ def get_uattr_str(uid,attr):
     return x
 
 
-@xl_func("str uid, string date_filter: string[]",category="CCPL-Category")
+@xl_func("str uid, string date_filter: string[]",category="CCPL-Category",thread_safe=True, volatile=False)
 def stat_statuses_text(uid, date_filter=None):
     fname = "%s%s.json" % (dir_status, uid)
     if not os.path.exists(fname):
@@ -96,7 +96,7 @@ def stat_statuses_text(uid, date_filter=None):
     return [['%s' % i for i in x]]
 
 
-@xl_func("str uid, string date_filter: string[]",category="CCPL-Category")
+@xl_func("str uid, string date_filter: string[]",category="CCPL-Category", thread_safe=True, volatile=False)
 def stat_statuses(uid, date_filter=None):
     fname = "%s%s.json" % (dir_status, uid)
     if not os.path.exists(fname):
@@ -219,7 +219,7 @@ def stat(uid):
     return r1 + '\t' + r2
 
 
-if __name__ == '__main__1':
+if __name__ == '__main__':
     with codecs.open('E:/result.csv','w',encoding='utf-8') as fw:
         with codecs.open(u"E:/Study/Research-Suicide/Data-用户实验-v2/UserList.txt",'r',encoding='utf-8-sig') as fp:
             for line in fp:
@@ -229,5 +229,5 @@ if __name__ == '__main__1':
                 fw.write(r)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__2':
     print stat(1191603864)

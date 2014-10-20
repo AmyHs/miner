@@ -23,8 +23,7 @@ def load_user(dic):
         qualifier = c[splitter+1:]
 
         if cf=='profile':
-            index = UserProfile.attrs.index(qualifier)
-            t_type = UserProfile.types[index]
+            t_type = UserProfile.types[qualifier]
             f = decode_map.get(t_type)
 
             if f is not None:
