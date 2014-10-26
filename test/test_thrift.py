@@ -11,7 +11,7 @@ from weibo import loader
 
 cfg = {
     #'host' : '192.168.21.173',
-    'host' : '192.168.21.51',
+    'host' : '192.168.9.12',
     'port' : 9090
 }
 

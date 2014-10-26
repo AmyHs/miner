@@ -9,7 +9,7 @@ port = 9090
 hosts = ['192.168.9.%d' % i for i in range(1,45)]
 
 class HBaseClient:
-    def __init__(self, index=0, ):
+    def __init__(self, index=0 ):
         address = HBaseClient.cfg[index]['host']
         port = HBaseClient.cfg[index]['port']
         self.index = index

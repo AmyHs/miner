@@ -6,12 +6,12 @@ from weibo.sina import APIClient
 from weibo.token import getToken
 
 from weibo import Status
-from hbase import gateway
+from hbase.gateway import *
 
 uname = 'd3a907fbea42783d@sina.com'
 passwd = 'd3a907fbea42783d'
 
-access_token = getToken(uname,passwd) #'2.00jAczuCfj3PXCfe7ed79b78jphQUD'
+access_token = '2.00jAczuCfj3PXC1f3dda93950SFjyK' #getToken(uname,passwd) #'2.00jAczuCfj3PXCfe7ed79b78jphQUD'
 print(access_token)
 
 APP_KEY = 'APP_KEY'            # app key
@@ -23,15 +23,18 @@ client.access_token = access_token
 
 
 def download_to_hbase():
-    statuses = client.statuses.public_timeline.get(count=200)
+    statuses = client.statuses.public_timeline.get(count=100)
     statuses = statuses.get('statuses')
-    for s in statuses:
 
+    hclient = HBaseClient(1)
+    for s in statuses:
         r_status = Status()
         r_status.load(s)
+        print s.get('text')
 
         batch = r_status.get_batches()
-        gateway.applyBatch(batch)
+        print batch
+        hclient.applyBatch(batch)
 
     #friends = client.friendships.friends.get(screen_name='Peter_Howe',trim_status=1,count=200,page=1)
     #friends = client.friendships.followers.get(screen_name='Peter_Howe',trim_status=1,count=200,page=1)
@@ -59,6 +62,5 @@ def nickname_to_uid(fname="J:/Comparison.txt"):
 
 
 if __name__ == '__main__':
-    pass
-    #download_to_hbase()
+    download_to_hbase()
 
