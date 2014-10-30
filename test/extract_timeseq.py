@@ -1,43 +1,22 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import util,os,codecs,json,MySQLdb
+import util,os,codecs,json
 from collections import defaultdict,OrderedDict
 from datetime import datetime
 from textmind.wenxin import TextMind
 
-cfg = {
-    'host':     "192.168.21.74",
-    'user':     "root",
-    'passwd':   "wsi_208",
-    "charset":  "utf8",
+#特征提取数据导出目录
+base_dir = 'G:/EXP-Data/'
 
-    "db":       "weibo_2000"
-}
+#设定数据源
+from extractor.source_mysql import DataSourceMySQL as DataSource
+dSource = DataSource()
 
-con = MySQLdb.connect(**cfg)
-cur = con.cursor (MySQLdb.cursors.DictCursor)
-
-def get_user_list_from_file(fpath):
-    result = []
-    with codecs.open(fpath,'r',encoding='utf-8-sig') as fp:
-        for line in fp:
-            line = line.strip(' \t\r\n')
-            result.append(line)
-    return result
-
-
-def get_user_list():
-    cur.execute('SELECT * FROM sinauids')
-    result = []
-    for uid in cur:
-        result.append(uid.get('SinaUid'))
-    return result
-
-def get_status(uid):
-    cur.execute('select created_at, text from sina_statuses where user_id=%s' % uid)
+def get_statuses_groupby_week(uid):
+    fields = ['created_at', 'text']
     result = defaultdict(str)
-    for s in cur:
+    for s in dSource.get_statuses(uid,fields):
         time = s.get('created_at')
         time = util.time2epoch(time)
         time = datetime.fromtimestamp(time)
@@ -53,15 +32,12 @@ def get_status(uid):
             result[key] = text
     return result
 
-
-base_dir = 'G:/EXP-Data/'
-
 def process_users(uid_list):
     for uid in uid_list:
         u_result = {}
 
         with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
-            statuses = get_status(uid)
+            statuses = get_statuses_groupby_week(uid)
             keys = sorted(statuses.iterkeys())
             for k in keys:
                 textMind = TextMind()
@@ -129,9 +105,9 @@ def process_features(uid_list,time_list):
                 fp.write('%s,' % cell)
             fp.write('\n')
 
+
 if __name__ == '__main__':
-    #uid_list = get_user_list()[:600]
-    uid_list = get_user_list_from_file(r"E:\Study\Publishing\TimeSequencePaper\data\UserList.txt")
+    uid_list = util.readlines(r"E:\Study\Publishing\TimeSequencePaper\data\UserList.txt")
     time_list = ['2011%02d' % i for i in range(15,53)] + ['2012%02d' % i for i in range(1,42)]
 
     #process_users(uid_list)

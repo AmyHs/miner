@@ -7,7 +7,7 @@ from datetime import datetime
 
 def get_user_path_list(base_dir, dir='/'):
     fpath = base_dir+'/TaskList.txt'
-    uids = get_lines(fpath)
+    uids = [line.strip(' \t\r\n') for line in codecs.open(fpath,'r',encoding='utf-8-sig')]
 
     updic = dict()
     for uid in uids:
@@ -17,16 +17,6 @@ def get_user_path_list(base_dir, dir='/'):
             dir = dir + '/'
         updic[uid] = base_dir + dir + uid
     return updic
-
-def get_lines(path_txt):
-    lines = set()
-    with codecs.open(path_txt,'r',encoding='utf-8-sig') as f:
-        for line in f:
-            e = line.strip(' \t\r\n')
-            if len(e)>0:
-                lines.add(e)
-
-    return lines
 
 def time_format(time_str):
     """Process the datetime format in Weibo and return epoch format."""
