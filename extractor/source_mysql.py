@@ -6,7 +6,7 @@ import MySQLdb
 _cfg = {
     'host':     "192.168.21.74",
     'user':     "root",
-    'passwd':   "",
+    'passwd':   "wsi_208",
     "charset":  "utf8",
 
     "db":       "weibo_2000"

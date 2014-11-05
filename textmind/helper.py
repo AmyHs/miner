@@ -65,7 +65,7 @@ def load_dic_terms(file_path, result_dic=None, prefix=None, tag_delimiter='\t', 
                 for t in t_crumbs:
                     if code_map is not None: t = code_map.get(t)
                     if prefix is not None: t = '%s/%s' % (prefix,t)
-                    result_dic[term].add(t)
+                    result_dic[term].add(t.lower())
                     n_tag += 1
 
             n_term += 1
@@ -104,7 +104,7 @@ def load_lst_terms(file_path, tag_name, result_dic=None, prefix=None):
             if len(line)<1 or line[0] == '%': continue  #以%开头的行作为字典文件的注释
 
             t = '%s/%s' % (prefix,t) if prefix is not None else tag_name
-            result_dic[line].add(t)
+            result_dic[line].add(t.lower())
             n_term += 1
 
     if debug:

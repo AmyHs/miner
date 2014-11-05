@@ -5,7 +5,7 @@ import MySQLdb
 cfg = {
     'host':     "192.168.8.1",
     'user':     "psymap",
-    'passwd':   "",
+    'passwd':   "wsi_208",
     "db":       "psymap",
     "charset":  "utf8"
 }
