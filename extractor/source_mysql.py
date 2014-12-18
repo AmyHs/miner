@@ -4,12 +4,12 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 import MySQLdb
 
 _cfg = {
-    'host':     "192.168.21.74",
+    'host':     "192.168.21.203",
     'user':     "root",
     'passwd':   "wsi_208",
     "charset":  "utf8",
 
-    "db":       "weibo_2000"
+    "db":       "mb_3"
 }
 
 def fields2str(fields):
@@ -23,8 +23,7 @@ def fields2str(fields):
 
 class DataSourceMySQL:
     def __init__(self,cfg=None):
-        if cfg is None:
-            self.cfg = _cfg
+        self.cfg = _cfg if cfg is None else cfg
         self.con = MySQLdb.connect(**self.cfg)
 
     def get_profile(self,uid,fields=None):
@@ -37,7 +36,6 @@ class DataSourceMySQL:
         for s in cur:
             u = s
         return u
-
 
     def get_statuses(self,uid,fields=None):
         _fields = fields2str(fields)

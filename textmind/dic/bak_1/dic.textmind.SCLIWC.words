@@ -2401,7 +2401,7 @@ x射线	Bio	Health
 中	CogMech	Funct	Inclusive	PresentM	PrepEnd	Relative	Space	TenseM
 到	CogMech	Funct	Inclusive	Relative	Verb	Motion	Preps
 来自	CogMech	Funct	Inclusive	Relative	Verb	Motion	Preps
-了	CogMech	Funct	Assent	Interjunction	TenseM	ProgM
+了	CogMech	Funct	Insight	Assent	Interjunction	TenseM	ProgM
 否定	CogMech	Funct	Negate	Inhibition	Social	Anger	Affect	NegEmo
 否认	CogMech	Funct	Negate	Inhibition	Social	Anger	Affect	NegEmo
 愿意	CogMech	Funct	PosEmo	Verb	Discrep	Affect	AuxVerb
@@ -3167,20 +3167,20 @@ x射线	Bio	Health
 伯公	Family	Social
 伯母	Family	Social
 曾祖父母	Family	Social
-出嫁	Social
+出嫁	Family	Social
 大伯	Family	Social
 爹	Family	Social
 爹爹	Family	Social
 父	Family	Social
 父母	Family	Social
 父亲	Family	Social
-妇女	Social
-干爸	Social
-干弟	Social
-干爹	Social
-干哥	Social
-干姐	Social
-干妈	Social
+妇女	Family	Social
+干爸	Family	Social
+干弟	Family	Social
+干爹	Family	Social
+干哥	Family	Social
+干姐	Family	Social
+干妈	Family	Social
 哥	Family	Social
 哥哥	Family	Social
 公公	Family	Social
@@ -3189,16 +3189,16 @@ x射线	Bio	Health
 姑妈	Family	Social
 姑母	Family	Social
 姑丈	Family	Social
-过继	Social
+过继	Family	Social
 后母	Family	Social
-婚姻	Social
+婚姻	Family	Social
 继父	Family	Social
 继母	Family	Social
 继子	Family	Social
 家属	Family	Social
-嫁	Social
-嫁娶	Social
-结婚	Social
+嫁	Family	Social
+嫁娶	Family	Social
+结婚	Family	Social
 妗	Family	Social
 老公	Family	Social
 老婆	Family	Social
@@ -3216,12 +3216,12 @@ x射线	Bio	Health
 婆婆	Family	Social
 前夫	Family	Social
 前妻	Family	Social
-前任	Social
+前任	Family	Social
 亲家	Family	Social
 亲戚	Family	Social
 亲属	Family	Social
-娶	Social
-入赘	Social
+娶	Family	Social
+入赘	Family	Social
 双亲	Family	Social
 孙	Family	Social
 孙儿	Family	Social
@@ -3242,7 +3242,7 @@ x射线	Bio	Health
 外祖父	Family	Social
 外祖母	Family	Social
 媳妇	Family	Social
-小狗	Social
+小狗	Family	Social
 小姑	Family	Social
 小叔	Family	Social
 兄	Family	Social
@@ -3251,14 +3251,14 @@ x射线	Bio	Health
 养女	Family	Social
 养子	Family	Social
 爷爷	Family	Social
-已婚	Social
-义父	Social
-义母	Social
-义女	Social
-义子	Social
+已婚	Family	Social
+义父	Family	Social
+义母	Family	Social
+义女	Family	Social
+义子	Family	Social
 异父	Family	Social
 异母	Family	Social
-迎娶	Social
+迎娶	Family	Social
 远亲	Family	Social
 丈夫	Family	Social
 妯娌	Family	Social

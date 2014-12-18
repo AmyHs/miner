@@ -9,4 +9,10 @@ from weibo.util import get_mtime as get_mtime
 
 import codecs
 def readlines(fpath,encode='utf-8-sig'):
-    return [line.strip(' \t\r\n') for line in codecs.open(fpath,'r',encoding=encode) if len(line.strip(' \t\r\n'))>0]
+    with codecs.open(fpath,'r',encoding=encode) as fp:
+        results = []
+        for line in fp:
+            line = line.strip(' \t\r\n')
+            if len(line)>0:
+                results.append(line)
+    return results

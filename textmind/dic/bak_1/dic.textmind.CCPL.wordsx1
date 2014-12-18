@@ -628,7 +628,7 @@
 脏话	Anger	Affect	NegEmo
 耍流氓	Anger	Affect	NegEmo
 变态	Anger	Affect	NegEmo
-尼玛	Anger	Affect	NegEmo
+尼玛的	Anger	Affect	NegEmo
 吵架	Anger	Affect	NegEmo
 滚蛋	Anger	Affect	NegEmo
 我靠	Anger	Affect	NegEmo
@@ -672,11 +672,11 @@
 好不好	Assent
 嘿嘿嘿	Assent
 饿死	Bio	Death
-汤匙	Bio	Ingest	Social
-勺子	Bio	Ingest	Social
-锅盖	Bio	Ingest
+汤匙	Bio	Family	Ingest	Social
+勺子	Bio	Family	Ingest	Social
+锅盖	Bio	Family	Ingest
 胎儿	Bio	Family
-牙刷	Bio	Health
+牙刷	Bio	Health	Family
 维生素C	Bio	Health	Ingest
 香烟	Bio	Health	Ingest
 切片	Bio	Health	Ingest
@@ -1037,8 +1037,8 @@
 爪子	Bio
 热血	Body	Affect	Bio
 泪水	Body	Bio	Affect	NegEmo	Sad
-睡衣	Body	Bio
-拖鞋	Body	Bio
+睡衣	Body	Bio	Family
+拖鞋	Body	Bio	Family
 油脂	Body	Bio	Health	Ingest
 雀斑	Body	Bio	Health
 疤痕	Body	Bio	Health
@@ -1213,7 +1213,7 @@
 血型	Body	Bio
 套装	Body	Bio
 脸色	Body	Bio
-家居服	Body
+家居服	Body	Family
 卷发	Body	Percept	See
 笑脸	Body	Percept	See
 满脸	Body	Percept	See
@@ -1679,56 +1679,105 @@
 地震	Death
 经不起	Discrep
 出乎	Exclusive
-亲友	Friend	Social
-餐桌	Ingest	Space
-筷子	Ingest
-壁纸	Leisure
-电视机	Leisure
-钢琴	Leisure
-法拉利	Leisure
-跑车	Leisure
-过日子	Social
+亲友	Family	Friend	Social
+餐桌	Family	Ingest	Space
+筷子	Family	Ingest
+壁纸	Family	Leisure
+电视机	Family	Leisure
+钢琴	Family	Leisure
+法拉利	Family	Leisure
+跑车	Family	Leisure
+过日子	Family	Social
 一家人	Family	Social
 姐夫	Family	Social
 姐姐	Family	Social
 姐妹	Family	Social
 闺女	Family	Social
 姨妈	Family	Social
-育儿	Social
-我家	Social
+育儿	Family	Social
+我家	Family	Social
 家居	Family	Social
-轿车	Social
+轿车	Family	Social
 弟弟	Family	Social
 儿女	Family	Social
-自行车	Social
-摩托	Social
+自行车	Family	Social
+摩托	Family	Social
 全家	Family	Social
 宝宝	Family	Social
 娘子	Family	Social
-电话	Social
+电话	Family	Social
 家长	Family	Social
 爸爸妈妈	Family	Social
-你家	Social
-爱车	Social
+你家	Family	Social
+爱车	Family	Social
 亲人	Family	Social
-花瓶	Social
-一家	Social
-门槛	Social
+花瓶	Family	Social
+一家	Family	Social
+门槛	Family	Social
 妻子	Family	Social
-领养	Social
-户口	Social
+领养	Family	Social
+户口	Family	Social
 夫妻	Family	Social
-空调	Social
+空调	Family	Social
 父子	Family	Social
-火柴	Social
-车牌	Social
-相册	Social
+火柴	Family	Social
+车牌	Family	Social
+相册	Family	Social
 老娘	Family	Social
-收拾	Social
+收拾	Family	Social
 老爹	Family	Social
 嫂子	Family	Social
+奥迪	Family
+瓶子	Family
+别墅	Family
+单车	Family
+亲情	Family
+用品	Family
+被子	Family
 老母	Family
+桌子	Family
+电动车	Family
+电池	Family
+纸巾	Family
+杯子	Family
+闹钟	Family
+世家	Family
+雨伞	Family
+奔驰	Family
+宅基地	Family
+瓷器	Family
+出身	Family
+电源	Family
+陶瓷	Family
+毛巾	Family
+马桶	Family
+家电	Family
+宝马	Family
+开关	Family
 亲子	Family
+椅子	Family
+卫浴	Family
+肥皂	Family
+住房	Family
+物品	Family
+钥匙	Family
+背包	Family
+二手房	Family
+婚纱照	Family
+车子	Family
+电器	Family
+居家	Family
+客厅	Family
+蜡烛	Family
+风扇	Family
+洗衣粉	Family
+灯泡	Family
+住宅	Family
+剪刀	Family
+容器	Family
+老家	Family
+菜刀	Family
+车型	Family
 细致	Feel	Affect	Percept	PosEmo
 滋润	Feel	Affect	Percept	PosEmo
 快感	Feel	Affect	Percept	PosEmo
@@ -1891,7 +1940,7 @@
 大姐	Humans	Family	Social
 妹子	Humans	Family	Social
 祖宗	Humans	Family
-小家伙	Humans
+小家伙	Humans	Family
 阿哥	Humans	Family
 哥们儿	Humans	Friend	Social
 伴娘	Humans	Friend	Social
@@ -2459,7 +2508,7 @@
 阵容	Leisure
 收视	Leisure
 转播	Leisure
-房产	Money
+房产	Money	Family
 富豪	Money	Humans
 富人	Money	Humans
 富翁	Money	Humans
@@ -2876,14 +2925,14 @@ A股	Money
 最低	Relative	CogMech
 战斗中	Relative	Death	Time
 逝去	Relative	Death	Time
-她家	Relative	Social
-新车	Relative	Social
-被窝	Relative	Space
-卫生间	Relative	Space
-家里	Relative	Space
-家园	Relative	Space
-小屋	Relative	Space
-他家	Relative
+她家	Relative	Family	Social
+新车	Relative	Family	Social
+被窝	Relative	Family	Space
+卫生间	Relative	Family	Space
+家里	Relative	Family	Space
+家园	Relative	Family	Space
+小屋	Relative	Family	Space
+他家	Relative	Family
 古人	Relative	Humans
 无处不在	Relative	Inclusive	Space
 全市	Relative	Inclusive	Space
@@ -2913,7 +2962,7 @@ A股	Money
 首播	Relative	Leisure
 大洋	Relative	Money	Space
 降价	Relative	Money
-回家	Relative	Motion
+回家	Relative	Motion	Family
 走走	Relative	Motion	Health
 旅游	Relative	Motion	Leisure
 追随	Relative	Motion	Social
@@ -3067,8 +3116,8 @@ A股	Money
 全新	Relative	Percept
 星空	Relative	See	Space
 黑夜	Relative	See	Time
-家门	Relative	Social	Space
-这家	Relative	Social	Space
+家门	Relative	Social	Family	Space
+这家	Relative	Social	Family	Space
 时空	Relative	Space	Time
 随时随地	Relative	Space	Time
 河南	Relative	Space
@@ -3920,7 +3969,7 @@ A股	Money
 博里	Space
 祖国	Space
 定位	Space
-谁家	Tentat	Social
+谁家	Tentat	Family	Social
 突发	Time
 母亲节	Time
 一念	Time
@@ -3931,7 +3980,7 @@ A股	Money
 首席	Work	Achieve
 革命	Work	Achieve
 创始人	Work	Achieve
-保姆	Work
+保姆	Work	Family
 师妹	Work	Humans	Friend	Social
 画家	Work	Humans	Leisure
 运动员	Work	Humans	Leisure

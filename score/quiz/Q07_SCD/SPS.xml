@@ -116,7 +116,7 @@ hs(7)	01 03 08 09 13 16 34
     </question>
 	
 	<question qid="q12" tag="ds">
-		<title>我感到孤独,难以忍受</title>
+		<title>我感到孤独，难以忍受</title>
 		<answer aid="a" score="1">从来没有</answer>
 		<answer aid="b" score="2">偶尔</answer>
 		<answer aid="c" score="3">大部分时间</answer>
@@ -132,7 +132,7 @@ hs(7)	01 03 08 09 13 16 34
     </question>
 	
 	<question qid="q14" tag="ds">
-		<title>如果一切可以重来,我的生活会有许多改变</title>
+		<title>如果一切可以重来，我的生活会有许多改变</title>
 		<answer aid="a" score="1">从来没有</answer>
 		<answer aid="b" score="2">偶尔</answer>
 		<answer aid="c" score="3">大部分时间</answer>
@@ -220,7 +220,7 @@ hs(7)	01 03 08 09 13 16 34
     </question>
 	
 	<question qid="q25" tag="si">
-		<title>我觉得就这样活着太痛苦了,还不如死掉</title>
+		<title>我觉得就这样活着太痛苦了，还不如死掉</title>
 		<answer aid="a" score="1">从来没有</answer>
 		<answer aid="b" score="2">偶尔</answer>
 		<answer aid="c" score="3">大部分时间</answer>
@@ -244,7 +244,7 @@ hs(7)	01 03 08 09 13 16 34
     </question>
 	
 	<question qid="q28" tag="ds">
-		<title>我感到绝望,我的事情不可能好起来</title>
+		<title>我感到绝望，我的事情不可能好起来</title>
 		<answer aid="a" score="1">从来没有</answer>
 		<answer aid="b" score="2">偶尔</answer>
 		<answer aid="c" score="3">大部分时间</answer>

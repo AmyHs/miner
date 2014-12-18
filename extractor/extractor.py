@@ -31,14 +31,13 @@ def iter_text(_statuses,_filter):
                 continue
             else:
                 created_at = s.get('created_at')
-                created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,str) else utc.localize(created_at)
+                created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
                 if created > _filter: continue
 
-        text = s.get('text')
-        yield text.encode('UTF-8')
+        text = s.get('text').encode('UTF-8')
+        yield text
 
-def extract_statuses_text(statuses, date_filter=None):
-    if date_filter is None: date_filter = 'Dec 12 23:59:59 +0800 2099'
+def extract_statuses_text(statuses, date_filter='Dec 12 23:59:59 +0800 2099'):
     date_filter = parser.parse(date_filter,fuzzy=True)
     tm = TextMind()
     iter = iter_text(statuses,date_filter)
@@ -80,7 +79,7 @@ def extract_statuses_behave(statuses, date_filter=None):
             continue
 
         created_at = s.get('created_at')
-        created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,str) else utc.localize(created_at)
+        created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
         if created < minCreatedAt: minCreatedAt = created
         if created > maxCreatedAt: maxCreatedAt = created
 

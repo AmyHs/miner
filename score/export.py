@@ -10,7 +10,7 @@ import dbutil,meta
 dimensions = OrderedDict()
 users = dict()
 
-quiz_with_answer = ['Q1_Deomographic','Q2_Demographic','HKU-CSRP']
+quiz_with_answer = ['Q2_UCLAAl','Q2_Demographic','HKU-CSRP','SPS','BFI48','DASS','FES-CV-Partial']
 
 def get_exp_fills(ExpId):
     cur = dbutil.get_cur()

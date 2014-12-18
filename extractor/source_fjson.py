@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import os,json
-from extractor import *
+import os,json,codecs
 
 def get_fjson(fjson_path):
     if not os.path.exists(fjson_path):
@@ -19,8 +18,7 @@ class DataSourceFJson:
         fname = "%s%s.profile" % (self.dir_profile,uid)
         return get_fjson(fname)
 
-    def get_statuses(self,uid):
+    def get_statuses(self,uid,do_yield=False):
         fname = "%s%s.json" % (self.dir_status, uid)
         statuses = get_fjson(fname)
-        for s in statuses:
-            yield s
+        return statuses
