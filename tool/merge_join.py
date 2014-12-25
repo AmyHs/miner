@@ -12,38 +12,34 @@ from collections import OrderedDict
 def mergeCol(files, outputfile):
     header = ["SinaUid"]
     data = OrderedDict()
-    nCol = 0
 
-    for flag in files:
-        fname = files[flag]
-        f = codecs.open(fname,'r',encoding='utf-8-sig')
-        lines = f.readlines()
-        spliter = "," if "," in lines[0] else "\t"
+    for flag,fname in files.iteritems():
+        with codecs.open(fname,'r',encoding='utf-8-sig') as fp:
+            line = fp.readline()
 
-        #表头处理
-        headerCols = lines[0].strip(' \t\r\n,').split(spliter)[1:]
-        for col in headerCols:
-            header.append(flag + col)
+            spliter = "," if "," in line else "\t"
 
-        #数据从第二行开始
-        for line in lines[1:]:
-            line = line.strip(' \t\r\n,')
-            fields = line.split(spliter)
+            #表头处理
+            headerCols = line.strip(' \t\r\n,').split(spliter)[1:]
+            for col in headerCols:
+                header.append(flag + col)
 
-            #第一列是UID，第二列开始是特征数据
-            uid = fields[0].rstrip(".txt")
-            values = fields[1:]
-            #print(values)
+            #数据从第二行开始
+            for line in fp:
+                line = line.strip(' \t\r\n,')
+                fields = line.split(spliter)
 
-            row = data.get(uid)
-            if row is None:
-                data[uid]=[]
+                #第一列是UID，第二列开始是特征数据
+                uid = fields[0].rstrip(".txt")
+                values = fields[1:]
 
-            for value in values:
-                data.get(uid).append(value)
-                if len ( data.get(uid) )> nCol:
-                    nCol = len( data.get(uid) )
+                if uid not in data:
+                    data[uid] = list()
 
+                for value in values:
+                    data.get(uid).append(value)
+
+    nCol = len(header) - 1
     f = codecs.open(outputfile,"w",encoding='utf-8')
 
     f.write(u'\uFEFF')
@@ -51,12 +47,11 @@ def mergeCol(files, outputfile):
     for h in header[1:]:
         f.write(","+h)
 
-    for uid in data:
-        if len( data[uid] ) < nCol:
-            continue
-        f.write("\n" + uid)
-        for c in data[uid]:
-            f.write(","+c)
+    for uid,fields in data.iteritems():
+        if len( fields ) < nCol: continue
+        f.write("\n" + uid + ',')
+        f.write(",".join(data.get(uid)))
+
 '''
 Month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 for month in Month:
@@ -66,7 +61,6 @@ for month in Month:
     ])
     outputFile = r"E:/features/byMonthMerged/[%s].csv" % month
     mergeCol(files,outputFile)
-
 '''
 
 if __name__ == '__main__':

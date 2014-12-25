@@ -7,11 +7,13 @@ from datetime import datetime
 from textmind.wenxin import TextMind
 
 #特征提取数据导出目录
-base_dir = 'G:/EXP-Data/'
+base_dir = 'G:/Exp-07/'
+
+#from extractor.source_mysql import DataSourceMySQL as DataSource
+from extractor.source_fjson import DataSourceFJson as DataSource
 
 #设定数据源
-from extractor.source_mysql import DataSourceMySQL as DataSource
-dSource = DataSource()
+dSource = DataSource(base_dir)
 
 def get_statuses_groupby_week(uid):
     fields = ['created_at', 'text']
@@ -32,23 +34,22 @@ def get_statuses_groupby_week(uid):
             result[key] = text
     return result
 
-def process_users(uid_list):
-    for uid in uid_list:
-        u_result = {}
+def process_user(uid):
+    u_result = {}
 
-        with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
-            statuses = get_statuses_groupby_week(uid)
-            keys = sorted(statuses.iterkeys())
-            for k in keys:
-                textMind = TextMind()
-                t = statuses.get(k)
-                v = t.encode('utf-8')
+    with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
+        statuses = get_statuses_groupby_week(uid)
+        keys = sorted(statuses.iterkeys())
+        for k in keys:
+            textMind = TextMind()
+            t = statuses.get(k)
+            v = t.encode('utf-8')
 
-                if len(v)>0:
-                    vec = textMind.process_paragraph(v,encoding='utf-8').dump(separator=',')
-                    u_result[k] = vec
+            if len(v)>0:
+                vec = textMind.process_paragraph(v,encoding='utf-8').dump(separator=',')
+                u_result[k] = vec
 
-            json.dump(u_result, fp, indent=1, sort_keys=True)
+        json.dump(u_result, fp, indent=1, sort_keys=True)
 
 def process_features(uid_list,time_list):
     header = TextMind().get_header()
@@ -107,8 +108,14 @@ def process_features(uid_list,time_list):
 
 
 if __name__ == '__main__':
-    uid_list = util.readlines(r"E:\Study\Publishing\TimeSequencePaper\data\UserList.txt")
-    time_list = ['2011%02d' % i for i in range(15,53)] + ['2012%02d' % i for i in range(1,42)]
 
-    #process_users(uid_list)
+    from multiprocessing import Pool, freeze_support
+    pool = Pool()
+    freeze_support()
+
+    uid_list = util.readlines(base_dir + "UserList.txt")
+    time_list = ['2013%02d' % i for i in range(1,53)] + ['2014%02d' % i for i in range(1,42)]
+
+    pool.map(process_user, uid_list)
+
     process_features(uid_list,time_list)

@@ -11,7 +11,7 @@ global results
 #from extractor.source_mysql import DataSourceMySQL as DataSource
 from extractor.source_fjson import DataSourceFJson as DataSource
 
-folder = 'G:/EXP-02/'
+folder = 'G:/EXP-07/'
 dSource = DataSource(folder)
 
 def extract(uid):
@@ -30,16 +30,16 @@ def extract(uid):
         return None
 
 if __name__ == '__main__':
-    #from multiprocessing import Pool, freeze_support
-    #pool = Pool()
-    #freeze_support()
+    from multiprocessing import Pool, freeze_support
+    pool = Pool(3)
+    freeze_support()
 
     output_file = folder + '/BasicFeatures.csv'
     uid_file = folder + "/UserList.txt"
     uids = util.readlines(uid_file)#[:100]
 
-    results = [extract(uid) for uid in uids]
-    #results = pool.map(extract,uids)
+    #results = [extract(uid) for uid in uids]
+    results = pool.map(extract,uids)
 
     with codecs.open(output_file, 'w+', encoding='utf-8') as fp:
         fp.write(u'\uFEFF')
