@@ -1,24 +1,25 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import util,os,codecs,json
+import util, os, codecs, json
 from collections import defaultdict,OrderedDict
 from datetime import datetime
 from textmind.wenxin import TextMind
 
-#特征提取数据导出目录
-base_dir = 'G:/Exp-07/'
+# 特征提取数据导出目录
+base_dir = 'G:/Exp-02/'
 
-#from extractor.source_mysql import DataSourceMySQL as DataSource
-from extractor.source_fjson import DataSourceFJson as DataSource
+# from source_mysql import DataSourceMySQL as DataSource
+from source_fjson import DataSourceFJson as DataSource
 
-#设定数据源
+# 设定数据源
 dSource = DataSource(base_dir)
+
 
 def get_statuses_groupby_week(uid):
     fields = ['created_at', 'text']
     result = defaultdict(str)
-    for s in dSource.get_statuses(uid,fields):
+    for s in dSource.get_statuses(uid, fields):
         time = s.get('created_at')
         time = util.time2epoch(time)
         time = datetime.fromtimestamp(time)
@@ -34,24 +35,30 @@ def get_statuses_groupby_week(uid):
             result[key] = text
     return result
 
+
 def process_user(uid):
     u_result = {}
 
-    with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
-        statuses = get_statuses_groupby_week(uid)
-        keys = sorted(statuses.iterkeys())
-        for k in keys:
-            textMind = TextMind()
-            t = statuses.get(k)
-            v = t.encode('utf-8')
+    try:
+        with codecs.open('%sOriginal/%s.json' % (base_dir, uid), 'w', encoding='utf-8') as fp:
+            statuses = get_statuses_groupby_week(uid)
+            keys = sorted(statuses.iterkeys())
+            for k in keys:
+                textMind = TextMind()
+                t = statuses.get(k)
+                v = t.encode('utf-8')
 
-            if len(v)>0:
-                vec = textMind.process_paragraph(v,encoding='utf-8').dump(separator=',')
-                u_result[k] = vec
+                if len(v) > 0:
+                    vec = textMind.process_paragraph(v,encoding='utf-8').dump(separator=',')
+                    u_result[k] = vec
 
-        json.dump(u_result, fp, indent=1, sort_keys=True)
+            json.dump(u_result, fp, indent=1, sort_keys=True)
+    except Exception as e:
+        print(uid)
+        print(e)
 
-def process_features(uid_list,time_list):
+
+def process_features(uid_list, time_list):
     header = TextMind().get_header()
 
     fw_pool = OrderedDict()
@@ -69,31 +76,31 @@ def process_features(uid_list,time_list):
             continue
 
         with codecs.open(fname, 'r', encoding='utf-8-sig') as fp:
-            u_seq = json.load(fp,encoding='utf-8')
+            u_seq = json.load(fp, encoding='utf-8')
 
-            #判断时序数据是否充足，可用于进行分析
+            # 判断时序数据是否充足，可用于进行分析
             tmp_counter = [1 if t in u_seq else 0 for t in time_list]
-            if sum(tmp_counter)<40: continue
-
+            if sum(tmp_counter) < 40:
+                continue
 
             times = set()
             for t in time_list:
-                vec = u_seq.get(t,None)
+                vec = u_seq.get(t, None)
                 features = [0] * len(header) if vec is None else vec.split(',')
                 if vec is not None:
                     times.add(t)
 
-                iter = 0
-                for head,fw in fw_pool.iteritems():
-                    fw.write( '%s,' % features[iter] )
-                    iter += 1
+                idx = 0
+                for head, fw in fw_pool.iteritems():
+                    fw.write('%s,' % features[idx])
+                    idx += 1
 
             for fw in fw_pool.values():
                 fw.write('\n')
 
         u_data[uid] = times
 
-    with codecs.open('%ssummary.csv' % (base_dir), 'w', encoding='utf-8') as fp:
+    with codecs.open('%ssummary.csv' % base_dir, 'w', encoding='utf-8') as fp:
         fp.write(',')
         for t in time_list:
             fp.write('%s,' % t)
@@ -108,14 +115,15 @@ def process_features(uid_list,time_list):
 
 
 if __name__ == '__main__':
-
     from multiprocessing import Pool, freeze_support
     pool = Pool()
     freeze_support()
 
     uid_list = util.readlines(base_dir + "UserList.txt")
-    time_list = ['2013%02d' % i for i in range(1,53)] + ['2014%02d' % i for i in range(1,42)]
 
+    # [process_user(uid) for uid in uid_list[400:500]]
     pool.map(process_user, uid_list)
+    pool.close()
 
-    process_features(uid_list,time_list)
+    time_list = ['2011%02d' % i for i in range(1, 53)] + ['2012%02d' % i for i in range(1, 42)]
+    process_features(uid_list, time_list)

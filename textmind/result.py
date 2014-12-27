@@ -43,21 +43,21 @@ class Result:
             result[tag] = 0
 
         added_tag = set()
-        #traverse the result map
+        # traverse the result map
         for Tag,val in self._results.iteritems():
             tag = Tag.lower()
 
             try:
                 ind = tag.rindex('/')
                 tmp = tag[ind+1:]
-            except ValueError as e:
+            except ValueError:
                 tmp = tag
 
-            new_tag = ordered_tags.get(tmp,Tag)
+            new_tag = ordered_tags.get(tmp, Tag)
             result[new_tag] = val
             added_tag.add(Tag)
 
-        for k,v in self._results.iteritems():
+        for k, v in self._results.iteritems():
             if k in added_tag:
                 continue
             result[k] = v
@@ -72,7 +72,7 @@ class Result:
                 for prefix in div_filter_prefix:
                     if k.startswith(prefix):
                         if divisor==0:
-                            #raise RuntimeError('Unable to find divisor tag [%s]!' % divisor_tag)
+                            # raise RuntimeError('Unable to find divisor tag [%s]!' % divisor_tag)
                             result[k] = '_%s' % v
                         else:
                             result[k] = 100.0 * v / divisor
@@ -95,7 +95,7 @@ class Result:
             result_[suffix] = tval + val
         return result_
 
-    def to_list(self,to_ration=True):
+    def to_list(self, to_ration=True):
         result = self.stat(to_ration=to_ration)
         return [i for i in result.itervalues()]
 

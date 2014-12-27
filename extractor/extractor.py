@@ -37,13 +37,14 @@ def iter_text(_statuses,_filter):
         text = s.get('text').encode('UTF-8')
         yield text
 
+
 def extract_statuses_text(statuses, date_filter='Dec 12 23:59:59 +0800 2099'):
-    date_filter = parser.parse(date_filter,fuzzy=True)
+    date_filter = parser.parse(date_filter,  fuzzy=True)
     tm = TextMind()
-    iter = iter_text(statuses,date_filter)
+    iter = iter_text(statuses, date_filter)
     r = tm.process_iterator(iter)
     x = r.to_list()
-    #print r.dump(to_ration=True,contains_header=True)
+    # print r.dump(to_ration=True,contains_header=True)
     return ['%s' % i for i in x]
 
 
@@ -90,7 +91,7 @@ def extract_statuses_behave(statuses, date_filter=None):
         text = s.get('text')
         hour = created.hour
 
-        n_original += 1 if "retweeted_status" in s else 0
+        n_original += 1 if "retweeted_status" in s or s.get('is_original', 0) == 1 else 0
         day = ''.join(str(t) for t in [created.year, created.month, created.day])
         days.add(int(day))
         n_comments += s.get('comments_count',0)
@@ -123,7 +124,7 @@ def extract_statuses_behave(statuses, date_filter=None):
         n_night += 1 if hour <6 or hour >22 else 0
 
     if n<1:
-        return [['N/A' for i in range(23)]]
+        return ['N/A' for i in range(23)]
 
     if n_filtered>0:
         n_comments /= n_filtered

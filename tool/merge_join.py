@@ -9,6 +9,7 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 import sys,codecs
 from collections import OrderedDict
 
+
 def mergeCol(files, outputfile):
     header = ["SinaUid"]
     data = OrderedDict()
@@ -40,7 +41,7 @@ def mergeCol(files, outputfile):
                     data.get(uid).append(value)
 
     nCol = len(header) - 1
-    f = codecs.open(outputfile,"w",encoding='utf-8')
+    f = codecs.open(outputfile, "w", encoding='utf-8')
 
     f.write(u'\uFEFF')
     f.write(header[0])
@@ -48,7 +49,7 @@ def mergeCol(files, outputfile):
         f.write(","+h)
 
     for uid,fields in data.iteritems():
-        if len( fields ) < nCol: continue
+        if len(fields) < nCol: continue
         f.write("\n" + uid + ',')
         f.write(",".join(data.get(uid)))
 
@@ -70,7 +71,7 @@ if __name__ == '__main__':
 
     outputFile = sys.argv[-1]
 
-    files=OrderedDict()
+    files = OrderedDict()
     for arg in sys.argv[1:-1]:
         print arg
         args = arg.split('_')
@@ -80,4 +81,4 @@ if __name__ == '__main__':
             prefix, fname = '', args[0]
         files[prefix+'_'] = fname
 
-    mergeCol(files,outputFile)
+    mergeCol(files, outputFile)

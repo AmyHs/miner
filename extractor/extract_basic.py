@@ -3,16 +3,17 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import codecs
 
-from extractor.extractor import *
+from extractor import *
 import util
 
 global results
 
-#from extractor.source_mysql import DataSourceMySQL as DataSource
-from extractor.source_fjson import DataSourceFJson as DataSource
+# from source_mysql import DataSourceMySQL as DataSource
+from source_fjson import DataSourceFJson as DataSource
 
 folder = 'G:/EXP-07/'
 dSource = DataSource(folder)
+
 
 def extract(uid):
     try:
@@ -29,17 +30,19 @@ def extract(uid):
     except RuntimeError as e:
         return None
 
+
 if __name__ == '__main__':
     from multiprocessing import Pool, freeze_support
-    pool = Pool(3)
+    pool = Pool()
     freeze_support()
 
     output_file = folder + '/BasicFeatures.csv'
     uid_file = folder + "/UserList.txt"
-    uids = util.readlines(uid_file)#[:100]
+    uids = util.readlines(uid_file)#[91:110]
 
-    #results = [extract(uid) for uid in uids]
-    results = pool.map(extract,uids)
+    # results = [extract(uid) for uid in uids]
+    results = pool.map(extract, uids)
+    pool.close()
 
     with codecs.open(output_file, 'w+', encoding='utf-8') as fp:
         fp.write(u'\uFEFF')
