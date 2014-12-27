@@ -6,7 +6,7 @@ from ltp_py import Postagger as Postagger_
 #from ltp_py import NamedEntityRecognizer as NamedEntityRecognizer_
 #from ltp_py import SementicRoleLabeller as SementicRoleLabeller_
 
-config_file = r"E:\Lib\LTP\3.1.0\ltp_data\ltp.cnf"
+config_file = r"D:\Program\LTP\3.1.0\ltp_data\ltp.cnf"
 
 model = {
     'segmentor-model':None,

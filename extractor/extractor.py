@@ -1,28 +1,33 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import re,numpy
-from dateutil import parser
-from pytz import UTC as utc
+import re
 from collections import OrderedDict
 
-import nlpir,util
+import numpy
+from dateutil import parser
+from pytz import UTC as utc
+
+import nlpir
+import util
 from textmind.wenxin import TextMind
+
 
 re_exp = re.compile(r'\[(\S+?)\]')
 
-set_We = set(['我们','大家','咱们','咱们','俺们'])    # 第一人称复数 http://baike.baidu.com/view/1569657.htm
-set_I  = set(['我','俺'])                             # 第一人称单数
+set_We = {'我们', '大家', '咱们', '咱们', '俺们'}    # 第一人称复数 http://baike.baidu.com/view/1569657.htm
+set_I  = {'我', '俺'}                             # 第一人称单数
 
 textLen = []
 
-#Get absolute path of base dir
-try:    ind = __file__.rindex('/' if '/' in __file__ else '\\')
+# Get absolute path of base dir
+try: ind = __file__.rindex('/' if '/' in __file__ else '\\')
 except: ind = len(__file__)
 cur_dir = __file__[:ind+1]
 
 neg_exp = util.readlines(cur_dir + r"./weibo/Exps-Neg.lst")
 pos_exp = util.readlines(cur_dir + r"./weibo/Exps-Pos.lst")
+
 
 def iter_text(_statuses,_filter):
     for s in _statuses:
@@ -31,8 +36,9 @@ def iter_text(_statuses,_filter):
                 continue
             else:
                 created_at = s.get('created_at')
-                created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
-                if created > _filter: continue
+                created = parser.parse(created_at, fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
+                if created > _filter:
+                    continue
 
         text = s.get('text').encode('UTF-8')
         yield text
@@ -41,8 +47,8 @@ def iter_text(_statuses,_filter):
 def extract_statuses_text(statuses, date_filter='Dec 12 23:59:59 +0800 2099'):
     date_filter = parser.parse(date_filter,  fuzzy=True)
     tm = TextMind()
-    iter = iter_text(statuses, date_filter)
-    r = tm.process_iterator(iter)
+    _iter = iter_text(statuses, date_filter)
+    r = tm.process_iterator(_iter)
     x = r.to_list()
     # print r.dump(to_ration=True,contains_header=True)
     return ['%s' % i for i in x]
@@ -71,16 +77,16 @@ def extract_statuses_behave(statuses, date_filter=None):
     if date_filter is None: date_filter = 'Dec 12 23:59:59 +0800 2099'
     filter = parser.parse(date_filter,fuzzy=True)
 
-    minCreatedAt = parser.parse('Dec 31 23:59:59 +0800 2099',fuzzy=True)
-    maxCreatedAt = parser.parse('Jan 01 00:00:01 +0800 1970',fuzzy=True)
-    
+    minCreatedAt = parser.parse('Dec 31 23:59:59 +0800 2099', fuzzy=True)
+    maxCreatedAt = parser.parse('Jan 01 00:00:01 +0800 1970', fuzzy=True)
+
     for s in statuses:
         n += 1
         if 'created_at' not in s:
             continue
 
         created_at = s.get('created_at')
-        created = parser.parse(created_at,fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
+        created = parser.parse(created_at, fuzzy=True) if isinstance(created_at,basestring) else utc.localize(created_at)
         if created < minCreatedAt: minCreatedAt = created
         if created > maxCreatedAt: maxCreatedAt = created
 
@@ -121,39 +127,39 @@ def extract_statuses_behave(statuses, date_filter=None):
             elif exp in pos_exp:
                 n_emotion_neg += 1
 
-        n_night += 1 if hour <6 or hour >22 else 0
+        n_night += 1 if hour < 6 or hour > 22 else 0
 
-    if n<1:
-        return ['N/A' for i in range(23)]
+    if n < 1:
+        return ['N/A'] * 23
 
-    if n_filtered>0:
+    if n_filtered > 0:
         n_comments /= n_filtered
         n_repost /= n_filtered
         n_attitudes /= n_filtered
 
     result = [n,
-              n_filtered,       #公开微博总数
-              n_original,       #原创微博数'
-              n_pic,            #含图片原创微博数'
-              n_url,            #含URL微博数
-              n_at,             #含@的微博数
-              n_contains_we,    #微博中第一人称复数使用次数
-              n_contains_I,     #微博中第一人称单数使用次数
-              n_night,          #夜间时段发微博数
-              n_emotion,        #含表情总数
-              n_emotion_pos,    #含积极表情总数
-              n_emotion_neg,    #含消极表情总数
-              numpy.mean(nTextLength) if len(nTextLength)>0 else 'N/A',      #公开微博字数平均值
-              numpy.std(nTextLength) if len(nTextLength)>0 else 'N/A',       #公开微博字数STD
-              numpy.max(nTextLength) if len(nTextLength)>0 else 'N/A',       #公开微博字数MAX
-              numpy.min(nTextLength) if len(nTextLength)>0 else 'N/A',       #公开微博字数MIN
-              numpy.median(nTextLength) if len(nTextLength)>0 else 'N/A',    #公开微博字数MEDIAN
-              len(days),        #发微博天数
-              n_comments,       #评论数
-              n_repost,         #转发数
-              n_attitudes,      #表态数
-              minCreatedAt,     #最早一条微博发布时间
-              maxCreatedAt      #最后一条微博发布时间
+              n_filtered,       # 公开微博总数
+              n_original,       # 原创微博数'
+              n_pic,            # 含图片原创微博数'
+              n_url,            # 含URL微博数
+              n_at,             # 含@的微博数
+              n_contains_we,    # 微博中第一人称复数使用次数
+              n_contains_I,     # 微博中第一人称单数使用次数
+              n_night,          # 夜间时段发微博数
+              n_emotion,        # 含表情总数
+              n_emotion_pos,    # 含积极表情总数
+              n_emotion_neg,    # 含消极表情总数
+              numpy.mean(nTextLength) if len(nTextLength) > 0 else 'N/A',      # 公开微博字数平均值
+              numpy.std(nTextLength) if len(nTextLength) > 0 else 'N/A',       # 公开微博字数STD
+              numpy.max(nTextLength) if len(nTextLength) > 0 else 'N/A',       # 公开微博字数MAX
+              numpy.min(nTextLength) if len(nTextLength) > 0 else 'N/A',       # 公开微博字数MIN
+              numpy.median(nTextLength) if len(nTextLength) > 0 else 'N/A',    # 公开微博字数MEDIAN
+              len(days),        # 发微博天数
+              n_comments,       # 评论数
+              n_repost,         # 转发数
+              n_attitudes,      # 表态数
+              minCreatedAt,     # 最早一条微博发布时间
+              maxCreatedAt      # 最后一条微博发布时间
     ]
     return [str(i) for i in result]
 
@@ -192,9 +198,10 @@ def extract_profile(u):
     f['市/区ID'] = u.get('city')
     return [i if not isinstance(i,(int, long, float)) else str(i) for i in f.values()]
 
+
 def stat(statuses):
     x = extract_statuses_behave(statuses)
     y = extract_statuses_text(statuses)
     x.extend(y)
     return x
-    #return '\t'.join(x)
+    # return '\t'.join(x)

@@ -11,13 +11,13 @@ global results
 # from source_mysql import DataSourceMySQL as DataSource
 from source_fjson import DataSourceFJson as DataSource
 
-folder = 'G:/EXP-07/'
+folder = 'G:/EXP-02/'
 dSource = DataSource(folder)
 
 
 def extract(uid):
     try:
-        profile  = dSource.get_profile(uid)
+        profile = dSource.get_profile(uid)
         v = [uid]
         if profile is not None:
             u = extract_profile(profile)
@@ -27,7 +27,7 @@ def extract(uid):
             v2 = extract_statuses_text(statuses)
             v += u+v1+v2
         return v
-    except RuntimeError as e:
+    except RuntimeError:
         return None
 
 

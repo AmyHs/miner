@@ -115,15 +115,15 @@ def process_features(uid_list, time_list):
 
 
 if __name__ == '__main__':
-    from multiprocessing import Pool, freeze_support
-    pool = Pool()
-    freeze_support()
+    # from multiprocessing import Pool, freeze_support
+    # pool = Pool()
+    # freeze_support()
 
     uid_list = util.readlines(base_dir + "UserList.txt")
 
     # [process_user(uid) for uid in uid_list[400:500]]
-    pool.map(process_user, uid_list)
-    pool.close()
+    # pool.map(process_user, uid_list)
+    # pool.close()
 
     time_list = ['2011%02d' % i for i in range(1, 53)] + ['2012%02d' % i for i in range(1, 42)]
     process_features(uid_list, time_list)
