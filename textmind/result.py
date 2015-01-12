@@ -35,7 +35,7 @@ class Result:
         tval = self._results.get(tag,0)
         self._results[tag] = tval + value
 
-    def stat(self, to_ration=False, div_filter_prefix=['textmind/','punctuation/'], divisor_tag = 'stat/WordCount' ):
+    def stat(self, to_ratio=False, div_filter_prefix=['textmind/','punctuation/'], divisor_tag = 'stat/WordCount' ):
         result = OrderedDefaultDict(float)
         ordered_tags = helper.aggregate_tags()
 
@@ -62,7 +62,7 @@ class Result:
                 continue
             result[k] = v
 
-        if to_ration:
+        if to_ratio:
             if not isinstance(div_filter_prefix,list):
                 div_filter_prefix = [div_filter_prefix]
             divisor = result.get(divisor_tag,0)
@@ -95,12 +95,15 @@ class Result:
             result_[suffix] = tval + val
         return result_
 
-    def to_list(self, to_ration=True):
-        result = self.stat(to_ration=to_ration)
-        return [i for i in result.itervalues()]
+    def to_list(self, to_ratio=True):
+        result = self.stat(to_ratio=to_ratio)
+        return result.itervalues()
 
-    def dump(self,to_ration=True, contains_header=False, separator='\t', fp=None):
-        result = self.stat(to_ration=to_ration)
+    def to_dict(self,to_ratio=True):
+        return self.stat(to_ratio=to_ratio)
+
+    def dump(self,to_ratio=True, contains_header=False, separator='\t', fp=None):
+        result = self.stat(to_ratio=to_ratio)
         r = separator.join( ['%s' % i for i in result.iterkeys()] ) + '\n' if contains_header else ''
         r += separator.join( ['%s' % i for i in result.itervalues()] )
         if fp is not None:

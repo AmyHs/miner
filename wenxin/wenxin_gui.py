@@ -7,7 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from wenxin_ui import Ui_MainWindow
 
-from wenxin import *
+from textmind.wenxin import *
 
 QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))
 
@@ -57,7 +57,7 @@ class MainForm(QtGui.QMainWindow):
         textmind = TextMind()
         result = textmind.process_paragraph(txt)
         self.analysis_result = result
-        r = result.stat(to_ration=True)
+        r = result.stat(to_ratio=True)
 
         table_view = self.ui.table
         table_view.clearContents()
@@ -106,7 +106,7 @@ class MainForm(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    splash=QSplashScreen(QPixmap("./image/splash.png"))
+    splash=QSplashScreen(QPixmap("./static/img/splash.png"))
     font = QtGui.QFont()
     font.setPointSize(12)
     splash.setFont(font)

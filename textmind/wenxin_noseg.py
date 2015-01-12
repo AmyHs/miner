@@ -13,7 +13,7 @@ from result import Result
 
 def default_seg(string):  # whitespace_seg: use this function if paragraph are segmented already.
     for t in string.split():
-        idx = t.rfind('\\')  # segmented word and POS separated by a char '\\'
+        idx = t.rfind('/')  # segmented word and POS separated by a char '/'
         yield (t[:idx], t[1 + idx:])
 
 
@@ -113,7 +113,7 @@ def process_iterator(lst_original, lst_segged, to_ration=True, enable_pos=False,
     r.accumulate('stat/NumHashTag', value=n_term_hashtag)
     r.accumulate('stat/NumURLs', value=n_term_url)
 
-    return r.to_list(to_ration)
+    return r.to_list(to_ratio)
 
 
 def process_paragraph(original_para, segged_para, to_ratio, encoding='utf-8', enable_pos=False):
@@ -126,7 +126,9 @@ def get_header(enable_pos=True):
 
 if __name__ == '__main__':
     p = "Every dog has its own day. Big News: @解放日报 [最右]【呼市铁路局原副局长被判死缓 最头痛藏钱】2013年12月底，呼市铁路局原副局长马俊飞因受贿被判死缓。他说最头痛藏钱，从呼和浩特到北京，马俊飞又是购房又是租房，在挥之不去的恐惧中，人民币8800万、美元419万、欧元30万、港币27万，黄金43.3公斤，逐渐堆满了两所#房子#…… http://t.cn/8kgR6Yi"
-    p_segged = r"Every\ws dog\v has\ws its\ws own\n day\ws .\wp Big\ws News\ws :\wp @\v 解放\v 日报\n [\wp 最\d 右\nd ]\v 【\ns 呼市\ns 铁路局\n 原\b 副\b 局长\n 被\p 判\v 死缓\j 最\d 头痛\a 藏\v 钱\n 】\wp 2013年\nt 12月\nt 底\nd ，\wp 呼市\ns 铁路局\n 原\b 副\b 局长\n 马俊飞\nh 因\p 受贿\v 被\p 判\v 死缓\j 。\wp 他\r 说\v 最\d 头痛\a 藏\v 钱\n ，\wp 从\p 呼和浩特\ns 到\p 北京\ns ，\wp 马俊飞\nh 又\d 是\v 购房\v 又\d 是\v 租房\n ，\wp 在\p 挥之不去\i 的\u 恐惧\a 中\nd ，\wp 人民币\n 8800万\m 、\wp 美元\n 419万\m 、\wp 欧元\n 30万\m 、\wp 港币\n 27万\m ，\wp 黄金\n 43.3\m 公斤\q ，\wp 逐渐\d 堆满\v 了\u 两\m 所\q #\v 房子\n #\n ……\wp http://t.cn/8kgR6Yi\%"
+    p_segged = r"Every/ws dog/v has/ws its/ws own/n day/ws ./wp Big/ws News/ws :/wp @/v 解放/v 日报/n [/wp 最/d 右/nd ]/v 【/ns 呼市/ns 铁路局/n 原/b 副/b 局长/n 被/p 判/v 死缓/j 最/d 头痛/a 藏/v 钱/n 】/wp 2013年/nt 12月/nt 底/nd ，/wp 呼市/ns 铁路局/n 原/b 副/b 局长/n 马俊飞/nh 因/p 受贿/v 被/p 判/v 死缓/j 。/wp 他/r 说/v 最/d 头痛/a 藏/v 钱/n ，/wp 从/p 呼和浩特/ns 到/p 北京/ns ，/wp 马俊飞/nh 又/d 是/v 购房/v 又/d 是/v 租房/n ，/wp 在/p 挥之不去/i 的/u 恐惧/a 中/nd ，/wp 人民币/n 8800万/m 、/wp 美元/n 419万/m 、/wp 欧元/n 30万/m 、/wp 港币/n 27万/m ，/wp 黄金/n 43.3/m 公斤/q ，/wp 逐渐/d 堆满/v 了/u 两/m 所/q #/v 房子/n #/n ……/wp http://t.cn/8kgR6Yi/%"
     r = process_paragraph(p, p_segged, to_ratio=True)
     print '\t'.join( get_header() )
-    print '\t'.join([str(t) for t in r])
+    print '\t'.join( ['%s' % i for i in r] )
+    #.to_list(to_ration=False)
+    #print r.dump(contains_header=True, to_ration=False)

@@ -15,7 +15,7 @@ rx_latin      = re.compile("[^\W\d_]+", re.UNICODE)
 rx_numeral    = re.compile(r"([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", re.UNICODE)
 rx_url        = re.compile(r"((ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&amp;%\$#_]*)?)", re.UNICODE)
 rx_emotion    = re.compile(r"(\[(.{1,16}?)\])", re.UNICODE)
-rx_at_mention = re.compile(r"@[\u4e00-\u9fa5a-zA-Z0-9_-]{4,30} ", re.UNICODE)
+rx_at_mention = re.compile(u"@[\u4e00-\u9fa5a-zA-Z0-9_-]{4,30} ", re.UNICODE)
 rx_hashtag    = re.compile(r"#[^#]+#", re.UNICODE)
 
 is_sentence_separator = lambda term: term in sentence_separator
@@ -23,7 +23,7 @@ is_latin              = lambda term: rx_latin.match(term) is not None
 find_numeral          = lambda string: [t[0] for t in rx_numeral.findall(string)]
 find_url              = lambda string: [t[0] for t in rx_url.findall(string)]
 find_emotions         = lambda string: [t[0] for t in rx_emotion.findall(string)]
-find_at_mention       = lambda string: [t[0] for t in rx_at_mention.findall(string)]
+find_at_mention       = lambda string: [t[0] for t in rx_at_mention.findall(string.decode('utf-8'))]
 find_hashtag          = lambda string: [t[0] for t in rx_hashtag.findall(string)]
 
 # load dictionary
@@ -107,7 +107,6 @@ def process_paragraph(paragraph, encoding='utf-8', enable_pos=True):
 
 
 def process_file(file_path, encoding='utf-8-sig', enable_pos=True):
-
     def iterate(fpath, file_encoding):
         with codecs.open(fpath, 'r', encoding=file_encoding) as fp:
             for line in fp:
@@ -141,10 +140,13 @@ class TextMind:
         return process_file(file_path, encoding=encoding, enable_pos=self.enablePOS)
 
 if __name__ == '__main__':
-    p = "Every dog has its own day. Big News: @解放日报 [最右]【呼市铁路局原副局长被判死缓 最头痛藏钱】2013年12月底，呼市铁路局原副局长马俊飞因受贿被判死缓。他说最头痛藏钱，从呼和浩特到北京，马俊飞又是购房又是租房，在挥之不去的恐惧中，人民币8800万、美元419万、欧元30万、港币27万，黄金43.3公斤，逐渐堆满了两所#房子#…… http://t.cn/8kgR6Yi"
+    p = "Every dog has its own day. Big News: @解放日报 [最右][最右]【呼市铁路局原副局长被判死缓 最头痛藏钱】2013年12月底，呼市铁路局原副局长马俊飞因受贿被判死缓。他说最头痛藏钱，从呼和浩特到北京，马俊飞又是购房又是租房，在挥之不去的恐惧中，人民币8800万、美元419万、欧元30万、港币27万，黄金43.3公斤，逐渐堆满了两所#房子#…… http://t.cn/8kgR6Yi"
 
     textMind = TextMind()
     r1 = textMind.process_paragraph(p)
     r2 = process_paragraph(p, enable_pos=False)
-    print r1.dump(to_ration=False, contains_header=True, separator='\t')
-    print r2.dump(to_ration=True, contains_header=False, separator='\t')
+    r3 = process_file(r"D:\Temp\20140324095815_ICTCLAS2014\test\18届三中全会.TXT".decode('utf-8'), enable_pos=False)
+
+    print r1.dump(to_ratio=False, contains_header=True, separator='\t')
+    print r2.dump(to_ratio=True, contains_header=False, separator='\t')
+    print r3.dump(to_ratio=True, contains_header=False, separator='\t')

@@ -6,19 +6,27 @@ from ltp_py import Postagger as Postagger_
 #from ltp_py import NamedEntityRecognizer as NamedEntityRecognizer_
 #from ltp_py import SementicRoleLabeller as SementicRoleLabeller_
 
-config_file = r"D:\Program\LTP\3.1.0\ltp_data\ltp.cnf"
+config_file = r"D:\Program\LTP\3.1.0\ltp_data\ltp.cnf"  # r".\3.1.0\ltp_data\ltp.cnf"
 
 model = {
-    'segmentor-model':None,
-    'postagger-model':None,
-    'parser-model':None,
-    'ner-model':None,
-    'srl-data':None
+     'segmentor-model':None
+    ,'postagger-model':None
+    ,'parser-model':None
+    ,'ner-model':None
+    ,'srl-data':None
 }
 
 def config(file):
-    if not os.path.exists(file):
-        raise RuntimeError("Config file doesn't exists!")
+    if os.path.exists(file):
+        pass
+    else:
+        try:    ind = __file__.rindex('/' if '/' in __file__ else '\\')
+        except: ind = len(__file__)
+        base = __file__[:ind+1] #Get absolute path of base dir
+        file = base + file
+        print file
+        if not os.path.exists(file):
+            raise RuntimeError("Config file doesn't exists!")
     base_dir = os.path.abspath(os.path.join(file, os.pardir))
     tmp = {}
     with open(file,'r') as fp:

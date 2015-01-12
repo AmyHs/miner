@@ -1,0 +1,197 @@
+﻿
+<!-- CONTENT -->
+<div class="col-lg-offset-2 col-md-offset-3 nopadding" id="content">
+
+	<!-- ABOUT -->
+	<section id="about" data-scroll-index="1">
+		<div class="section-container row nomargin">
+			<div>
+				<h2 class="wow fadeInDown" data-wow-delay="0.5s" data-wow-duration="1.5s"> 欢迎使用“文心”！ </h2>
+				<p class="wow fadeIn" data-wow-delay="1.5s" data-wow-duration="2s">　　“文心(TextMind)”中文心理分析系统是由中科院心理所<a href="http://ccpl.psych.ac.cn" target="_blank">计算网络心理实验室</a>研发的，针对中文文本进行语言分析的软件系统，通过“文心”，您可以便捷地分析文本中使用的不同类别语言的程度、偏好等特点。针对中国大陆地区简体环境下的语言特点，参照<a target="_blank" href="http://www.liwc.net/">LIWC2007</a>和<a target="_blank" href="https://sites.google.com/site/taiwanliwc">正體中文C-LIWC</a>词库，我们开发了“文心（TextMind）”中文心理分析系统。“文心”为用户提供从<a target="_blank" href="http://www.ltp-cloud.com/">简体中文自动分词</a>，到语言心理分析的一揽子分析解决方案，其词库、文字和符号等处理方法专门针对简体中文语境，词库分类体系也与LIWC兼容一致。</p>
+
+				<p class="wow fadeIn" data-wow-delay="1.5s" data-wow-duration="1s">　　TextMind is a Chinese language psychological analysis system developed by <a target="_blank" href="http://ccpl.psych.ac.cn">Computational Cyber-Psychology Lab</a>, Institute of Psychology, Chinese Academy of Sciences. TextMind provides easy access to analysis the preferences and degrees of different categories in text. Inspired by the dictionary of <a target="_blank" href="http://www.liwc.net/">LIWC2007</a> and <a target="_blank" href="https://sites.google.com/site/taiwanliwc">C-LIWC</a>, we developed TextMind based on the characteristics of Simplified Chinese language in mainland China, which provides an all-in-one solution from <a target="_blank" href="http://www.ltp-cloud.com/">automatic Chinese words segmentation</a> to psychological analysis. The processing to dictionary, text and punctuation is optimized to Simpilified Chinese, and the categories is compatible to LIWC.</p>
+				<hr/>
+
+				<small>■ <b>Primary contact person:</b> <i style="font-weight: bold;"><a target="_blank" href="http://sourcedb.psych.cas.cn/cn/psychexpert/201206/t20120628_3606154.html">Tingshao Zhu</a></i>, Institute of Psychology, Chinese Academy of Sciences.</small><br/>
+                                        
+				<small>■ <b>Email:</b> TextMind#live.com  (Please change the hash character to @)</small><br/>
+                                        
+				<small>■ <b>Official Citation: </b>Rui Gao, Bibo Hao, He Li, Yusong Gao, Tingshao Zhu. <i style="font-weight: bold;">Developing Simplified Chinese Psychological Linguistic Analysis Dictionary for Microblog</i>. 2013 International Conference on Brain & Health Informatics (BHI'13). Oct. 2013. Maebashi, Japan.</small>
+			</div>
+		</div>
+	</section>
+
+	<!-- Demo -->
+	<section id="demo" data-scroll-index="2">
+		<div class="section-container row nomargin">
+			<div class="section-title">
+				<h1 class="dark-font">在线分析</h1>				
+				<span class="border dark-border"></span>
+				<span id="ntips" class="badge badge-warning">您还可以输入<i id="total">20000</i>个字。</span>
+				<textarea class="form-control" id="txt" name="message" placeholder="请您在此处输入您想要分析的文本，然后点击下面的按钮。" rows="20" required></textarea>
+				<button class="btn btn-custom wow fadeIn" id="btnDo"><i class="fa fa-send-o fa-fw"></i>开始分析</button>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Result -->
+	<section id="result" data-scroll-index="3" class="result-hidden" style="display:none;">
+		<div class="section-container row nomargin">
+
+			<div class="section-title">
+				<h1 class="dark-font">分析结果</h1>
+				<span class="border dark-border"></span>
+				<span class="badge badge-warning">特征名称具体含义请参照词典说明文件，特征名中含“Rate”的5个值为比率，其余为计数。</span>
+			</div>
+			
+			<div id="result">
+				<div id="dTable"></div>
+				<hr>
+			</div>
+
+		</div>
+	</section>
+	
+	<!-- Download -->
+	<section id="download" data-scroll-index="4">
+		<div class="section-container row nomargin">
+			<div class="section-title">
+				<h1 class="dark-font">软件下载</h1>
+				<span class="border dark-border"></span>
+			</div>
+			<div class="col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1 form-container" id="form">
+				<form id="register" method="post" role="form" onsubmit="return false;" action="./register">
+					<div class="col-lg-6 form-container wow fadeIn" data-wow-delay="0.25s" data-wow-duration="2s">
+						<input class="form-control" id="name" name="name" type="text" placeholder="您的姓名 (Your Name)" required>
+						<input class="form-control" id="email" name="email" type="email" placeholder="您的单位邮箱 (Your Email Registered in Your Affiliation)" required>
+						<input class="form-control" id="affiliation" name="affiliation" type="text" placeholder="您的单位全称 (Your Affiliation)" required>
+					</div>
+					<div class="col-lg-6 form-container wow fadeIn" data-wow-delay="0.5s" data-wow-duration="2s">
+						<textarea class="form-control" id="message" name="message" maxlength="100" placeholder="您使用文心系统的用途简介，100字以内。(Purpose of Use)" rows="9" required></textarea>
+					</div>
+					<div class="clearfix clear">
+					<h4>【使用协议】</h4>
+					<p style="text-align:left">　　您对文心系统及其词典的使用：<br>
+						1、仅限于学术目的而非商业目的，不将该词典的部分或全部内容转移给第三人或第三方；<br>
+						2、在使用了文心系统或其词典后，请在您的研究报告中作相应的引用。<br>
+					</p>
+					</div>
+					<div class="clearfix visible-lg-block visible-md-block" id="download-info">下载软件即表示您同意上述软件使用协议。</div>
+					<button class="btn btn-custom wow fadeIn" id="submit" type="submit" data-wow-delay="3s" data-wow-duration="2s">同意协议并下载<i class="fa fa-download fa-fw"></i></button>
+				</form>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- FOOTER -->
+	<section id="footer">
+		<div class="row nomargin">
+			<a id="scrollTop" href="#content"><h4 class="wow fadeIn" data-wow-delay="0.25s" data-wow-duration="0.75s"><i class="fa fa-hand-o-up fa-fw fa-lg"></i>回到页面顶端</h4></a>
+		</div>
+	</section>
+	
+	<script>
+		var maxLength=20000;
+		var getLength = function(str, shortUrl){
+			if (true == shortUrl){
+				return Math.ceil(str.replace(/((news|telnet|nttp|file|http|ftp|https):\/\/){1}(([-A-Za-z0-9]+(\.[-A-Za-z0-9]+)*(\.[-A-Za-z]{2,5}))|([0-9]{1,3}(\.[0-9]{1,3}){3}))(:[0-9]*)?(\/[-A-Za-z0-9_$$\.\+\!\*\(\),;:@&=\?\/~#\%]*)*/ig, 'http://goo.gl/fkKB ')
+									.replace(/^\s+|\s+$$/ig,'').replace(/[^\x00-\xff]/ig,'xx').length/2);
+			}else{
+				return Math.ceil(str.replace(/^\s+|\s+$$/ig,'').replace(/[^\x00-\xff]/ig,'xx').length/2);
+			}
+		};
+		
+		$$.fn.serializeObject = function(){
+			var o = {};
+			var a = this.serializeArray();
+			$$.each(a, function() {
+				if (o[this.name] !== undefined) {
+					if (!o[this.name].push) {
+						o[this.name] = [o[this.name]];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};
+		
+		function getText(v){
+			var len = getLength(v);
+			if(len<=maxLength){
+				$$("#total").html(maxLength-len);
+				$$("#ntips").removeClass("label-important").addClass("label-info");
+				$$("#btnDo").removeClass("class","disabled");
+				$$("#ntips").html("您还可以输入<i id='total'>"+(maxLength-len)+"</i>个字。");
+			}else{
+				$$("#ntips").removeClass("label-info").addClass("label-important");
+				$$("#btnDo").addClass("class","disabled");
+				$$("#ntips").html("您的输入比最大限制超出了<i id='total'>"+(len-maxLength)+"</i>个字，请删去部分再分析。");
+			}
+		}
+
+		$$(function() {
+			$$('#txt').bind("input",function(){ getText($$(this).val()); });
+			
+			$$("#btnDo").click(function(){
+				var str = jQuery("#txt").val();
+				$$.post("./analysis",{"str":str},function(d){
+					window.console&&window.console.info(d);
+					var info = "抱歉，分析失败！请您先确认分析文本的长度未超出限制，如果仍有问题，欢迎您通过微博、邮箱向我们反馈问题。";
+					if("success"==d.status){
+						info = "“文心”分析结果";
+						json = d.result;
+						
+						var htmls=['<table id="rTable" class="table table-bordered table-hover">']; 
+						htmls.push('<tr><td>特征名称</td><td>值</td></tr>');
+						for(var i=0,L=json.length;i<L;i++){
+							htmls.push('<tr>');
+								htmls.push('<td>'+json[i].name+'</td>');
+								htmls.push('<td>'+json[i].value+'</td>'); 
+							htmls.push('</tr>');
+						}
+						htmls.push('</table>');
+						
+						$$('#dTable').html(htmls.join(''));
+					}
+					
+					$$("#rStat").html(info);
+					$$(".result-hidden").show();
+					$$("#result-link a").click();
+					
+				});
+			});
+			
+			
+			
+			$$('#submit').click(function(){
+				var data = $$('#register').serializeObject();
+				var valid = validateEmail(data.email);
+				for(var i in data) valid &= (data[i].length)>0;
+				if(!valid){
+					alert("请您正确填写您的个人信息！");
+					return false;
+				}
+				
+				
+				$$.post("./register",data,function(d){
+					if("success"==d.status){
+						var link = '<a id="link" target="_blank" href="' + d.url + '" style="color:red;">下载链接</a>'; 
+						link = $$.parseHTML( link );
+						$$('#download-info').append(link)
+						$$('#link')[0].click();
+						$$('#submit').attr('disabled','true');
+						alert('如果没有弹出下载页面，请点击页面上的“下载链接”。');
+					}else{
+						alert(d.msg);
+					}
+				})
+			});
+			
+		});
+	</script>
+
+
+</div>
