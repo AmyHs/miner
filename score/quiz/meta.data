@@ -14,6 +14,16 @@
   "Intro": "本问卷基于大五人格心理模型，通过填写本问卷，您可以了解自己的人格特征和稳定的性格倾向、个性心理特征。", 
   "ScreenName": "大五人格测试"
  }, 
+ "BJ_Demographic": {
+  "XmlPath": "./quiz/Q08_BJ/BJ_Demographic.xml", 
+  "Intro": "本问卷调查用户的基本信息。", 
+  "ScreenName": "基本信息调查问卷"
+ }, 
+ "BJ_SocialAttitude": {
+  "XmlPath": "./quiz/Q08_BJ/BJ_SocialAttitude.xml", 
+  "Intro": "本问卷调查填写者的色会态度。", 
+  "ScreenName": "社会态度调查问卷"
+ }, 
  "DASS": {
   "XmlPath": "./quiz/Q07_SCD/DASS.xml", 
   "Intro": "本问卷主要测评填写者在生活中的焦虑、抑郁情绪和生活压力。", 
@@ -33,6 +43,11 @@
   "XmlPath": "./quiz/Q07_SCD/FES-CV-Partial.xml", 
   "Intro": "本问卷调查了解您的家庭环境状况。", 
   "ScreenName": "家庭环境量表"
+ }, 
+ "Happiness": {
+  "XmlPath": "./quiz/Q08_BJ/Happiness.xml", 
+  "Intro": "本问卷测量用户的幸福感。", 
+  "ScreenName": "幸福感测量问卷"
  }, 
  "HKU-CSRP": {
   "XmlPath": "./quiz/Q07_SCD/HKU-CSRP.xml", 

@@ -15,8 +15,9 @@ class UserProfile(Base):
         'followers_count', 'friends_count', 'statuses_count', 'favourites_count', 'bi_followers_count',
         'geo_enabled', 'allow_all_comment', 'allow_all_act_msg', 'verified', 'verified_type', 'verified_reason',
         'province', 'city', 'location', 'profile_image_url', 'avatar_large', 'avatar_hd', 'lang',
-        #created_at_or: 留存created_at的原始字段的原始字符串类型
-        'created_at_or']
+        'created_at_or', # created_at_or: 留存created_at的原始字段的原始字符串类型
+        'update'  # 爬虫下载该条微博的时间戳
+    ]
 
     types = dict(zip(attrs,
         [long, str,
@@ -24,7 +25,7 @@ class UserProfile(Base):
         int, int, int, int, int,
         bool, bool, bool, bool, str, str,
         str, str, str, str, str, str, str,
-        str]
+        str, int]
     ))
 
     def __init__(self):
@@ -94,4 +95,4 @@ class UserProfile(Base):
         r = dict()
         for t in self.attrs:
             r[t] = self.get_original_value(t)
-        return json.dumps(r,indent=1,ensure_ascii=False)
+        return json.dumps(r,indent=1,ensure_ascii=False, sort_keys=True)

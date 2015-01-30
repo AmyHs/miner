@@ -29,3 +29,6 @@ def get_quiz(quiz_id):
         q = quiz.Quiz(quiz_id)
         quizs[quiz_id] = q
     return q
+
+if __name__ == '__main__':
+    quizs_dump()

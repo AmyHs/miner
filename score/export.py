@@ -10,7 +10,7 @@ import dbutil,meta
 dimensions = OrderedDict()
 users = dict()
 
-quiz_with_answer = ['Q2_UCLAAl','Q2_Demographic','HKU-CSRP','SPS','BFI48','DASS','FES-CV-Partial']
+quiz_with_answer = ['BJ_Demographic']
 
 def get_exp_fills(ExpId):
     cur = dbutil.get_cur()
@@ -82,6 +82,6 @@ if __name__ == '__main__':
     for u,scores in users.iteritems():
         line = '%s,' % u
         for dim in dimensions:
-            line += '%s,' % scores[dim]
+            line += '%s,' % scores.get(dim,'')
 
         print line

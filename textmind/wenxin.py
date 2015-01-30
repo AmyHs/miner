@@ -140,13 +140,15 @@ class TextMind:
         return process_file(file_path, encoding=encoding, enable_pos=self.enablePOS)
 
 if __name__ == '__main__':
-    p = "Every dog has its own day. Big News: @解放日报 [最右][最右]【呼市铁路局原副局长被判死缓 最头痛藏钱】2013年12月底，呼市铁路局原副局长马俊飞因受贿被判死缓。他说最头痛藏钱，从呼和浩特到北京，马俊飞又是购房又是租房，在挥之不去的恐惧中，人民币8800万、美元419万、欧元30万、港币27万，黄金43.3公斤，逐渐堆满了两所#房子#…… http://t.cn/8kgR6Yi"
-
+    #p = "Every dog has its own day. Big News: @解放日报 [最右][最右]【呼市铁路局原副局长被判死缓 最头痛藏钱】2013年12月底，呼市铁路局原副局长马俊飞因受贿被判死缓。他说最头痛藏钱，从呼和浩特到北京，马俊飞又是购房又是租房，在挥之不去的恐惧中，人民币8800万、美元419万、欧元30万、港币27万，黄金43.3公斤，逐渐堆满了两所#房子#…… http://t.cn/8kgR6Yi"
+    p1 = "忘了一件事，一号都去报社，这是别的群定的。他们以做了横幅。我们也一定去。都克服，克服困难。我也跟大家一样不愿去，但我知我必须去。那一份担当，四大群都去，警察少正好商量下一步如何走。我不希望看到昨天的景像。这是转自微信群里的 "
+    p2 = "今天真清闲，电话也没有，也没来俺家，是不是jc要遗忘我了"
     textMind = TextMind()
-    r1 = textMind.process_paragraph(p)
-    r2 = process_paragraph(p, enable_pos=False)
-    r3 = process_file(r"D:\Temp\20140324095815_ICTCLAS2014\test\18届三中全会.TXT".decode('utf-8'), enable_pos=False)
+    #r1 = textMind.process_paragraph(p)
+    r1 = process_paragraph(p1, enable_pos=False)
+    r2 = process_paragraph(p2, enable_pos=False)
+    #r3 = process_file(r"D:\Temp\20140324095815_ICTCLAS2014\test\18届三中全会.TXT".decode('utf-8'), enable_pos=False)
 
     print r1.dump(to_ratio=False, contains_header=True, separator='\t')
     print r2.dump(to_ratio=True, contains_header=False, separator='\t')
-    print r3.dump(to_ratio=True, contains_header=False, separator='\t')
+    #print r3.dump(to_ratio=True, contains_header=False, separator='\t')

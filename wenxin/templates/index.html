@@ -137,6 +137,7 @@
 			
 			$$("#btnDo").click(function(){
 				var str = jQuery("#txt").val();
+				if(str.length<2){alert("请正确输入要分析的文本！");return false;}
 				$$.post("./analysis",{"str":str},function(d){
 					window.console&&window.console.info(d);
 					var info = "抱歉，分析失败！请您先确认分析文本的长度未超出限制，如果仍有问题，欢迎您通过微博、邮箱向我们反馈问题。";

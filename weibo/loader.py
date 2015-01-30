@@ -8,7 +8,7 @@ decode_map = {
     str : None,
     int : '>i',
     long: '>q',
-    bool: '>i'
+    bool: '>?'
 }
 
 def load_user(dic):
@@ -16,11 +16,11 @@ def load_user(dic):
 
     for col,val in dic.iteritems():
         c = bytearray(col)
-        #寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascci值的时候
+        #寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascii值的时候
         #就会被拆分成多个值而非两个
         splitter = c.find(':')
         cf = c[:splitter]
-        qualifier = c[splitter+1:]
+        qualifier = str( c[splitter+1:] )
 
         if cf=='profile':
             t_type = UserProfile.types[qualifier]
@@ -28,8 +28,8 @@ def load_user(dic):
 
             if f is not None:
                 v = struct.unpack(f, val.value)
-                if isinstance(v,tuple): v=v[0]  #if unpacked value is tuple, pick the first element.
-                if t_type==bool: v=bool(v)      #fix the bool bug, convert from int to bool.
+                if isinstance(v,tuple): v=v[0]  # if unpacked value is tuple, pick the first element.
+                if t_type==bool: v=bool(v)      # fix the bool bug, convert from int to bool.
             else:
                 v = val.value
 
