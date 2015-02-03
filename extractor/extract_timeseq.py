@@ -1,16 +1,21 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
-import util, os, codecs, json
+import os
+import codecs
+import json
 from collections import defaultdict,OrderedDict
 from datetime import datetime
+
+import util
 from textmind.wenxin import TextMind
+
 
 # 特征提取数据导出目录
 base_dir = 'G:/Exp-02/'
 
 # from source_mysql import DataSourceMySQL as DataSource
-from source_fjson import DataSourceFJson as DataSource
+from weibo.source_fjson import DataSourceFJson as DataSource
 
 # 设定数据源
 dSource = DataSource(base_dir)

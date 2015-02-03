@@ -5,7 +5,7 @@ import struct,json
 from datetime import datetime
 
 import util
-from weibo import Base
+from base import Base
 
 class UserProfile(Base):
     table_name = '%s_user' % Base.get_prefix()

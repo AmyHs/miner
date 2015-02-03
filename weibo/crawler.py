@@ -2,7 +2,7 @@
 __author__ = 'Peter Howe(haobibo@gmail.com)'
 
 import math,os,codecs
-from sina import *
+from source_sina import *
 import util
 
 access_token = '2.00ZPCQvCfj3PXCdfae6d3a250XaASC'

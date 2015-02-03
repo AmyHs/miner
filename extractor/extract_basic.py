@@ -9,7 +9,7 @@ import util
 global results
 
 # from source_mysql import DataSourceMySQL as DataSource
-from source_fjson import DataSourceFJson as DataSource
+from weibo.source_fjson import DataSourceFJson as DataSource
 
 folder = 'G:/EXP-02/'
 dSource = DataSource(folder)

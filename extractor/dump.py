@@ -1,10 +1,11 @@
 #-*- encoding=utf-8 -*-
+from weibo import source_mysql
+
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import codecs,json
 
-import source_mysql
-from source_mysql import DataSourceMySQL as Source
+from weibo.source_mysql import DataSourceMySQL as Source
 
 import util
 

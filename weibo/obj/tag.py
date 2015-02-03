@@ -3,7 +3,7 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import struct
 from hbase.Hbase import *
-from weibo import Base
+from base import Base
 
 class UserTag:
     table_name = '%s_user' % Base.get_prefix()

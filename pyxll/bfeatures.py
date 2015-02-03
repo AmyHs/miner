@@ -2,10 +2,11 @@
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 from dateutil import parser
-from pyxll import xl_func
 
-from extractor.source_fjson import DataSourceFJson
+from pyxll import xl_func
+from weibo.source_fjson import DataSourceFJson
 from extractor.extractor import extract_statuses_text,extract_statuses_behave
+
 
 base_dir = r"J:/UserData/"
 dsource = DataSourceFJson(base_dir)

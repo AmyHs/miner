@@ -3,8 +3,9 @@ __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import struct,json
 from datetime import datetime
-from weibo import *
+
 import util
+from base import Base
 
 class Repost(Base):
     table_name = '%s_status' % Base.get_prefix()

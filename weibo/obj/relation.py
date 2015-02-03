@@ -5,7 +5,8 @@ import struct
 from hbase.Hbase import *
 
 import util
-from weibo import Base,UserProfile
+from base import Base
+from profile import UserProfile
 
 verified_type_map = {
     -1:32,

@@ -6,20 +6,24 @@ from datetime import datetime
 
 from hbase.Hbase import *
 
-from weibo import Base
+from base import Base
 
 import util
 
 class Status(Base):
     table_name = '%s_status' % Base.get_prefix()
     column_family = 'status'
-    attrs = ['key', 'idstr', 'uid', 'text', 'seg', 'c_at_or', 'created_at',
+    attrs = ['key', 'idstr', 'uid', 'text', 'c_at_or', 'created_at',
          'reposts_count', 'comments_count', 'attitudes_count',
-         'source', 'geo', 'pic_urls', 'annotations', 'truncated', 'r_id']
+         'source', 'geo', 'pic_urls', 'annotations', 'truncated', 'r_id',
+        'seg'
+    ]
     types = dict(zip(attrs,
-        [None, str, long, str, str, str, int,
+        [None, str, long, str, str, int,
         int, int ,int,
-        str, str, str, str, bool, long]
+        str, str, str, str, bool, long,
+         str,
+        ]
     ))
 
     def __init__(self):

@@ -2,7 +2,7 @@
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
 import json, codecs
-from weibo.sina import APIClient
+from weibo.source_sina import APIClient
 from weibo.token import getToken
 
 from weibo import Status
