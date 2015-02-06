@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Peter_Howe<haobibo@gmail.com>'
 
+import random
 from thrift.transport import *
 from hbase import Hbase
 
@@ -20,19 +21,20 @@ decode_map = {
     bool: '>?'
 }
 
-pack_uid = lambda uid: buffer(struct.pack('<q', uid))
-pack_mid = lambda uid,mid: buffer( struct.pack('<qq', uid, mid) )
+pack_uid = lambda uid: buffer(struct.pack('<q', long(uid)))
+pack_mid = lambda uid, mid: buffer(struct.pack('<qq', long(uid), long(mid)))
+
 
 def load_user(dic):
     profile = relation = status = tag = psy = None
 
-    for col,val in dic.iteritems():
+    for col, val in dic.iteritems():
         c = bytearray(col)
-        #寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascii值的时候
-        #就会被拆分成多个值而非两个
+        # 寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascii值的时候
+        # 就会被拆分成多个值而非两个
         splitter = c.find(':')
         cf = c[:splitter]
-        qualifier = str( c[splitter+1:] )
+        qualifier = str(c[splitter+1:])
 
         if cf == 'profile':
             t_type = UserProfile.types.get(qualifier)
@@ -40,31 +42,38 @@ def load_user(dic):
 
             if f is not None:
                 v = struct.unpack(f, val.value)
-                if isinstance(v,tuple): v=v[0]  # if unpacked value is tuple, pick the first element.
-                if t_type==bool: v=bool(v)      # fix the bool bug, convert from int to bool.
+                if isinstance(v, tuple):
+                    v = v[0]  # if unpacked value is tuple, pick the first element.
+                if t_type == bool:
+                    v = bool(v)      # fix the bool bug, convert from int to bool.
             else:
                 v = val.value
 
-            if profile is None: profile = UserProfile()
+            if profile is None:
+                profile = UserProfile()
             qualifier = str(qualifier)
-            profile.setattr(qualifier,v)
+            profile.setattr(qualifier, v)
 
         elif cf == 'relation':
-            qualifier = struct.unpack('<q',qualifier)
-            if relation is None: relation=dict()
+            qualifier = struct.unpack('<q', qualifier)
+            if relation is None:
+                relation = dict()
             relation[qualifier] = val.value
 
         elif cf == 'status':
-            qualifier = struct.unpack('<qq',qualifier)
-            if status is None: status=dict()
+            qualifier = struct.unpack('<qq', qualifier)
+            if status is None:
+                status = dict()
             status[qualifier] = val.value
 
         elif cf == 'tag':
-            if tag is None: tag=dict()
+            if tag is None:
+                tag = dict()
             tag[qualifier] = val.value
 
         elif cf == 'psy':
-            if psy is None: psy=dict()
+            if psy is None:
+                psy = dict()
             psy[qualifier] = val.value
 
         else:
@@ -78,49 +87,58 @@ def load_status(dic):
 
     for col,val in dic.iteritems():
         c = bytearray(col)
-        #寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascci值的时候
-        #就会被拆分成多个值而非两个
+        # 寻找第一个:的位置，这里不应当使用split函数，否则如果qualifier当中含有的byte恰好等于:的ascci值的时候
+        # 就会被拆分成多个值而非两个
         splitter = c.find(':')
         cf = c[:splitter]
         qualifier = str( c[splitter+1:] )
 
-        if cf=='status':
+        if cf == 'status':
             t_type = Status.types.get(qualifier)
             f = decode_map.get(t_type)
 
             if f is not None:
                 v = struct.unpack(f, val.value)
-                if isinstance(v,tuple): v=v[0]  #if unpacked value is tuple, pick the first element.
-                if t_type==bool: v=bool(v)      #fix the bool bug, convert from int to bool.
+                if isinstance(v, tuple): v=v[0]  # if unpacked value is tuple, pick the first element.
+                if t_type == bool:
+                    v = bool(v)      # fix the bool bug, convert from int to bool.
             else:
                 v = val.value
 
-            if status is None: status = Status()
+            if status is None:
+                status = Status()
             qualifier = str(qualifier)
-            status.setattr(qualifier,v)
+            status.setattr(qualifier, v)
 
-        elif cf=='repost':
-            t_type = Repost.types[qualifier]
+        elif cf == 'repost':
+            t_type = Repost.types.get(qualifier)
             f = decode_map.get(t_type)
 
             if f is not None:
-                if t_type==long and len(val.value)==4: f='<i'
+                if t_type == long and len(val.value)==4: f='<i'
                 v = struct.unpack(f, val.value)
-                if isinstance(v,tuple): v=v[0]  #if unpacked value is tuple, pick the first element.
-                if t_type==bool: v=bool(v)      #fix the bool bug, convert from int to bool.
+                if isinstance(v, tuple): v = v[0]  # if unpacked value is tuple, pick the first element.
+                if t_type == bool:
+                    v = bool(v)      # fix the bool bug, convert from int to bool.
             else:
                 v = val.value
 
-            if repost is None: repost = Repost()
+            if repost is None:
+                repost = Repost()
             qualifier = str(qualifier)
-            repost.setattr(qualifier,v)
+            repost.setattr(qualifier, v)
 
-    return (status,repost)
+    return (status, repost)
 
 
 class DataSourceHBase:
-    def __init__(self,cfg=None):
-        self.cfg = _cfg if cfg is None else cfg
+    def __init__(self, cfg=None):
+        if cfg is None:
+            _cfg['host'] = '192.168.9.%s' % random.randint(1,40)
+            self.cfg = _cfg
+        else:
+            self.cfg = cfg
+
         self._transport = None
 
     def __del__(self):
@@ -141,33 +159,41 @@ class DataSourceHBase:
         key = pack_uid(uid)
 
         client = self._get_client()
-        results = client.getRowWithColumns(self.cfg['table_user'],key, ['relation','status','profile'],None)
+        results = client.getRowWithColumns(self.cfg['table_user'], key, ['relation', 'status', 'profile'], None)
 
-        if len(results)>0:
+        if len(results) > 0:
             result = results[0]
-            (profile,relation,status,tag,psy) = load_user(result.columns)
-            return (profile,relation,status,tag,psy)
+            result_tuple = load_user(result.columns)
+            for column in result_tuple:
+                if column is not None and isinstance(column, Base):
+                    column.__dict__.pop('batches', None)
+            return result_tuple[0]  # (profile, relation, status, tag, psy)
         else:
             return None
-
 
     def get_status(self, uid, mid):
         key = pack_mid(uid,mid)
 
         client = self._get_client()
-        results = client.getRowWithColumns(self.cfg['table_status'],key, ['status','repost'],None)
+        results = client.getRowWithColumns(self.cfg['table_status'], key, ['status', 'repost'],None)
 
-        if len(results)>0:
+        if len(results) > 0:
             result = results[0]
             (status, repost) = load_status(result.columns)
-            return (status, repost)
+            if status is not None:
+                status.__dict__.pop('batches')
+                ret = {}
+                ret.update(status.__dict__)
+                if repost is not None:
+                    repost.__dict__.pop('batches')
+                    ret['retweeted_status'] = repost.__dict__
+            return ret
         else:
             return None
 
-
     def get_statuses(self, uid):
-        key_beg = pack_mid(uid,0)
-        key_end = pack_mid(uid,0x7fffffffffffffff)
+        key_beg = pack_mid(uid, 0)
+        key_end = pack_mid(uid, 0x7fffffffffffffff)
         scan = Hbase.TScan(startRow=key_beg, stopRow=key_end)
 
         client = self._get_client()
@@ -176,20 +202,29 @@ class DataSourceHBase:
         i = 0
         while True:
             i += 1
-            row_list = client.scannerGetList(scanner,i)
+            row_list = client.scannerGetList(scanner, i)
             if not row_list:
                 break
 
             for row in row_list:
-                yield load_status(row.columns)
+                (status, repost) = load_status(row.columns)
+                if status is not None:
+                    status.__dict__.pop('batches')
+                    ret = {}
+                    ret.update(status.__dict__)
+                    if repost is not None:
+                        repost.__dict__.pop('batches')
+                        ret['retweeted_status'] = repost.__dict__
+                yield ret
 
         client.scannerClose(scanner)
 
 
 if __name__ == '__main__':
     source = DataSourceHBase()
-    #print source.get_profile(2474190592)[0]
-    #print source.get_status(2474190592,3580543843428607)[0]
+    # print source.get_profile(2474190592)[0]
+    # print source.get_status(2474190592,3580543843428607)[0]
     i = 0
-    for post, repost in source.get_statuses(2474190592): i+=1
+    for post, repost in source.get_statuses(2133649592):
+        i += 1
     print i

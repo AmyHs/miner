@@ -34,12 +34,13 @@ class UserProfile(Base):
     def load(self, dic):
         for attr in UserProfile.attrs:
             v = dic.get(attr)
-            if attr=='key':
+            if attr == 'key':
                 v = dic.get('id')
-            if v is None:continue
-            self.setattr(attr,v)
+            if v is None:
+                continue
+            self.setattr(attr, v)
 
-        #如果用户Profile信息包含有其最新的一条微博的信息
+        # 如果用户Profile信息包含有其最新的一条微博的信息
         status = dic.get('status')
         if status is None: return
         from weibo import Status
@@ -48,38 +49,37 @@ class UserProfile(Base):
         batches = s.get_batches()
         self.batches.extend(batches)
 
-    def setattr(self,attr,v):
-        if attr in ['province','city','verified_type'] and not isinstance(v,str):
-            #认证类别、省、市ID用用str存储
+    def setattr(self, attr, v):
+        if attr in ['province', 'city', 'verified_type'] and not isinstance(v, str):
+            # 认证类别、省、市ID用用str存储
             v = str(v)
         elif attr == 'idstr' and v is None:
             v = str(id)
         elif attr == 'created_at':
             str_original = None
-            if isinstance(v,int):   #Epoch Time as int or datetime.datetime
+            if isinstance(v, int):   # Epoch Time as int or datetime.datetime
                 str_original = util.time2str(v)
-            elif isinstance(v,datetime):
+            elif isinstance(v, datetime):
                 v = util.time2epoch(v)
                 str_original = util.time2str(v)
             else:   # str
                 str_original = v
-                v = util.time2epoch(v)  #创建日期，转换为基于东八区的Epoch整数格式
-            #print '%25s\t:=\t%s' % ('created_at_or',v)
+                v = util.time2epoch(v)  # 创建日期，转换为基于东八区的Epoch整数格式
+            # print '%25s\t:=\t%s' % ('created_at_or',v)
             self.__setattr__('created_at_or',str_original)
 
-        #print '%25s\t:=\t%s' % (attr,v)
+        # print '%25s\t:=\t%s' % (attr,v)
         self.__setattr__(attr,v)
 
-    def getattr(self,attr):
-        #处理特殊字段
+    def getattr(self, attr):
+        # 处理特殊字段
         if attr == 'key':
             return int(self.key)
         else:
-
             return self.get_bytes(attr, UserProfile.types.get(attr))
 
     def get_original_value(self,attr):
-        #处理特殊字段
+        # 处理特殊字段
         if attr == 'key':
             return int(self.idstr)
         else:
@@ -95,4 +95,4 @@ class UserProfile(Base):
         r = dict()
         for t in self.attrs:
             r[t] = self.get_original_value(t)
-        return json.dumps(r,indent=1,ensure_ascii=False, sort_keys=True)
+        return json.dumps(r, encoding='utf-8', indent=1, ensure_ascii=False, sort_keys=True)

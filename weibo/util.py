@@ -69,13 +69,14 @@ def time2epoch(time_str):
         stamp = int(time.mktime(time_str.timetuple()))
     return stamp
 
+
 def time2str(time_str=None):
     """Process the datetime format in datetime.datetime or epoch and return Weibo format str."""
-    if isinstance(time_str,str):
-        #Convert from string to epoch
+    if isinstance(time_str, str):
+        # Convert from string to epoch
         dtmp = datetime.strptime(time_str, "%a %b %d %X %Y")
         time_str = int(time.mktime(dtmp.timetuple()))
-    elif isinstance(time_str,datetime):
+    elif isinstance(time_str, datetime):
         time_str = int(time.mktime(time_str.timetuple()))
     elif time_str is None:
         time_str = int(time.mktime(time.localtime()))
@@ -89,9 +90,11 @@ def get_mtime(path):
     stamp = int(time.mktime(dtmp.timetuple()))
     return stamp
 
+
 def now2epoch():
     now = time.mktime(time.localtime())
     return int(now)
+
 
 def convert_endian(v):
     f = None
@@ -105,32 +108,34 @@ def convert_endian(v):
     if f is not None: v = buffer(struct.pack(f, v))
     return v
 
+
 def unpack_little_endian(v):
     n = len(v)/8
     f = struct.unpack_from('<' + 'q'*n, v)
     return f
 
-def store_image(source_url,dest_fname,headers=None):
+
+def store_image(source_url, dest_fname, headers=None):
     head = {}
     if headers is not None:
         head.update(headers)
 
     data = 3
-    while data>0:
+    while data > 0:
         data -= 1
         try:
             req = urllib2.Request(source_url, None, head)
-            data=urllib2.urlopen(req).read()
+            data = urllib2.urlopen(req).read()
             break
         except Exception as e:
-            print('Unable to download image [Time:%d][%s]' % (data,source_url))
-            #raise RuntimeWarning('Unable to download image [%s]' % source_url)
+            print('Unable to download image [Time:%d][%s]' % (data, source_url))
+            # raise RuntimeWarning('Unable to download image [%s]' % source_url)
 
-    if isinstance(data,int):
+    if isinstance(data, int):
         print('Unable to save image [%s]' % source_url)
         return False
 
-    fout = file(dest_fname,"wb")
+    fout = file(dest_fname, "wb")
     fout.write(data)
     fout.close()
     return True
